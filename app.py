@@ -93,61 +93,123 @@ def submit():
 
 html_template = '''
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Chat Interface</title>
+    <meta charset="UTF-8">
+    <title>Modern Chat Interface</title>
     <style>
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: 'Roboto', sans-serif;
+            background-color: #1e1e2f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #27293d;
+            font-weight: normal;
         }
         #chat-container {
-            height: 400px;
-            border: 1px solid #ccc;
+            flex-grow: 1;
             padding: 20px;
             overflow-y: auto;
-            margin-bottom: 20px;
-            border-radius: 5px;
+            background-color: #1e1e2f;
         }
         .message {
-            margin-bottom: 10px;
-            padding: 10px;
-            border-radius: 5px;
+            margin-bottom: 20px;
+            max-width: 60%;
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+            padding: 15px 20px;
+            border-radius: 20px;
+            animation: fadeIn 0.3s ease-in-out;
         }
         .user-message {
-            background-color: #e3f2fd;
-            margin-left: 20%;
+            background-color: #4f8bf9;
+            margin-left: auto;
+            margin-right: 20px;
+            text-align: right;
         }
         .system-message {
-            background-color: #f5f5f5;
-            margin-right: 20%;
+            background-color: #2a2a40;
+            margin-left: 20px;
+            margin-right: auto;
+            text-align: left;
         }
         #input-container {
             display: flex;
-            gap: 10px;
+            padding: 10px 20px;
+            background-color: #27293d;
         }
         #message-input {
             flex-grow: 1;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 30px;
+            outline: none;
+            font-size: 16px;
+            background-color: #1e1e2f;
+            color: #fff;
         }
-        button {
-            padding: 10px 20px;
-            background-color: #2196f3;
+        #message-input::placeholder {
+            color: #ccc;
+        }
+        #send-button {
+            padding: 0 20px;
+            margin-left: 10px;
+            background-color: #4f8bf9;
             color: white;
             border: none;
-            border-radius: 5px;
+            border-radius: 30px;
             cursor: pointer;
+            font-size: 16px;
+            outline: none;
+            transition: background-color 0.3s;
         }
-        button:disabled {
-            background-color: #ccc;
+        #send-button:hover {
+            background-color: #407dd4;
         }
-        .error {
-            color: red;
-            margin-top: 10px;
+        #send-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        #error {
+            color: #f44336;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #27293d;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Scrollbar styling */
+        #chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-container::-webkit-scrollbar-thumb {
+            background-color: #444;
+            border-radius: 4px;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .message {
+                max-width: 80%;
+            }
+            #message-input, #send-button {
+                font-size: 14px;
+            }
         }
     </style>
 </head>
@@ -158,7 +220,7 @@ html_template = '''
         <input type="text" id="message-input" placeholder="Type your message...">
         <button onclick="sendMessage()" id="send-button">Send</button>
     </div>
-    <div id="error" class="error"></div>
+    <div id="error"></div>
 
     <script>
         let sessionId = null;
@@ -198,7 +260,7 @@ html_template = '''
                 });
 
                 const data = await response.json();
-                
+
                 if (response.ok) {
                     sessionId = data.session_id;
                     addMessage(data.response, 'system');
@@ -220,13 +282,19 @@ html_template = '''
         function addMessage(message, type) {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${type}-message`;
-            messageDiv.textContent = message;
+
+            // Create message content
+            const messageContent = document.createElement('span');
+            messageContent.textContent = message;
+            messageDiv.appendChild(messageContent);
+
             chatContainer.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
     </script>
 </body>
 </html>
+
 '''
 
 import os
