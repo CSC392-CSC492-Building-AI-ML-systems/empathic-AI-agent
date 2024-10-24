@@ -1,0 +1,79 @@
+ID,User_Story,User_Input,Expected_Response,Actual_Response,Evaluation,Emotion
+sample1,1,Book a meeting for me tomorrow.,Do you mean scheduling a meeting with your team or someone else tomorrow?,"Could you please provide more details about the meeting? Like the time, duration, and if there are any specific people to invite?","The AI's response meets all the requirements outlined in the acceptance criteria. 
+
+- The AI successfully detected the ambiguity in the user's request to ""book a meeting for me tomorrow."" The user did not provide specific details such as the time of the meeting, its duration, or the people to invite. 
+- The AI asked targeted follow-up questions to help narrow down the user's intent. It asked for the time, duration, and the specific people to invite to the meeting. These questions are directly related to the task at hand and do not make any incorrect assumptions about the user's intent.
+- The AI did not proceed with booking the meeting until the user provides more information, adhering to the requirement not to act until the user's intent is clarified.
+- As this is the first interaction, we cannot evaluate the AI's ability to maintain a natural, human-like flow with no abrupt shifts in tone or behavior after 5 interactions. However, the AI's response is natural and human-like, suggesting it would maintain this tone in subsequent interactions.",
+sample2,1,I need help with my account.,"Are you referring to accessing your account, updating your information, or something else?",Could you please specify which account you need help with and what kind of issue you are experiencing?,"The AI's response meets all the requirements outlined in the acceptance criteria. 
+
+- The user's request was ambiguous as they did not specify which account they needed help with or what the issue was. The AI detected this ambiguity and asked a clarifying question.
+- The AI's follow-up question was targeted and aimed at narrowing down the user's intent. It did not make any assumptions about the user's issue.
+- The AI did not proceed with any actions until the user clarified their intent.
+- As this is the first interaction, we cannot evaluate the AI's ability to maintain a natural, human-like flow with no abrupt shifts in tone or behavior after 5 interactions. However, the AI's response was natural and human-like in this interaction. 
+
+Overall, the AI's response was appropriate and met the requirements.",
+sample3,1,Can you send that report?,Could you specify which report you’d like me to send?,Could you please specify which report you are referring to?,"The AI's response meets all the acceptance criteria listed:
+
+- The AI successfully detected the ambiguity in the user's request. The user asked for ""that report"" without specifying which report they were referring to. This is ambiguous because without further context, the AI cannot determine the exact report the user wants.
+- The AI asked a targeted follow-up question to help narrow down the user's intent. By asking the user to specify which report they are referring to, the AI is seeking to clarify the user's request without making any assumptions.
+- The AI did not proceed with any actions until the user clarified their intent. Instead of guessing which report the user might want, the AI asked for clarification.
+- As this is only the first interaction, we cannot evaluate whether the conversation maintains a natural, human-like flow with no abrupt shifts in tone or behavior after 5 interactions. However, the AI's response is natural and human-like, and there is no abrupt shift in tone or behavior in this interaction.
+
+Therefore, based on this single interaction, the AI's response is in line with the acceptance criteria.",
+sample4,1,Plan a trip.,"Are you looking to plan a vacation, a business trip, or something else?","Could you please provide more details like the destination, duration, and dates for the trip?","The AI's response meets all the requirements outlined in the acceptance criteria. 
+
+- The user's input ""Plan a trip"" is ambiguous as it lacks specific details. The AI correctly identifies this ambiguity.
+- The AI then asks targeted follow-up questions to help narrow down the user's intent. It asks for the destination, duration, and dates for the trip, which are all crucial details for planning a trip.
+- The AI does not make any assumptions or proceed with actions until the user clarifies their intent. It does not attempt to guess the user's preferences or make any decisions on its own.
+- The conversation maintains a natural, human-like flow. The AI's response is polite and straightforward, and it does not exhibit any abrupt shifts in tone or behavior. 
+
+However, as this is only the first interaction, it's not possible to evaluate whether the AI maintains this behavior after 5 interactions. But based on this single interaction, the AI's performance is satisfactory.",
+sample5,1,I want to change settings.,"Which settings would you like to change? For example, display settings or notification preferences?",Could you please specify which settings you want to change and in which application or device?,"The AI's response meets all the requirements outlined in the acceptance criteria. 
+
+- The user's request was ambiguous as they did not specify which settings they wanted to change or in which application or device. The AI detected this ambiguity and did not proceed with any actions.
+- The AI asked a targeted follow-up question to help narrow down the user's intent. It asked the user to specify which settings they wanted to change and in which application or device, without making any incorrect assumptions about the user's intent.
+- The AI maintained a natural, human-like flow in the conversation. It responded in a polite and professional manner, asking for more information to better assist the user. 
+
+Since this is only the first interaction, we cannot evaluate the AI's behavior after 5 interactions. However, based on this single interaction, the AI is performing as expected.",
+sample6,2,I've been trying to learn Python.,What aspects of Python are you focusing on right now?,"That's great! Python is a widely used high-level programming language for general-purpose programming. It is user-friendly and has a simple syntax which makes it a great language for beginners. 
+
+There are numerous resources available online to help you learn Python. Websites like Codecademy, Coursera and Udemy offer interactive Python courses. You can also refer to books like ""Learn Python the Hard Way"" by Zed Shaw and ""Python Crash Course"" by Eric Matthes. 
+
+In addition, practicing coding problems on websites like HackerRank and LeetCode will also help you enhance your Python skills. It's also beneficial to work on small projects as it gives you practical experience and helps you understand how to apply Python in solving real-world problems. Happy coding!","The AI's response does not meet the requirements. While the AI provides a detailed and informative response about Python and resources to learn it, it does not ask any follow-up questions to the user's statement. The AI should have asked questions to engage the user further, such as ""What made you interested in learning Python?"" or ""Do you have any specific goals you want to achieve with Python?"" or ""How are you finding the learning process so far?"" These questions would have prompted further engagement and exploration of the topic in more detail.",
+sample7,2,I just adopted a new puppy.,That's exciting! How is your puppy adjusting to its new home?,"That's wonderful news! A new puppy is a bundle of joy. Be ready for lots of playtime and cuddles, but also remember that puppies require considerable care and attention. 
+
+Firstly, make sure your home is puppy-proofed - remove any toxic plants, secure loose wires, and ensure small objects that can be swallowed are out of reach. 
+
+Ensure your puppy is getting balanced nutrition. Consult with a vet to understand the dietary needs of your puppy. 
+
+Regular vet check-ups are essential to keep your puppy healthy. Your puppy will need vaccinations and regular treatments for worms and fleas. 
+
+Socializing your puppy is also key. Once your vet gives the go-ahead, expose your puppy to different environments, people and other animals. 
+
+Lastly, start training your puppy early. Whether it's basic commands or toilet training, consistency is key. 
+
+Remember, patience is crucial during this period. There might be a few chewed shoes or accidents on the rug, but with love and patience, your puppy will soon settle into its new home. Enjoy your time with your new furry friend!","The AI's response does not meet the requirements. While the AI provides a detailed and informative response about caring for a new puppy, it does not ask any contextually relevant follow-up questions based on the user's input. The AI's response does not prompt further engagement or exploration of topics in more detail. The conversation does not remain consistent for at least 5 interactions, as there is only one interaction from the AI.",
+sample8,2,I'm planning to start a garden this spring.,What types of plants are you considering for your garden?,"That's a wonderful idea! Gardening can be a rewarding and therapeutic activity. Here are some tips to help you get started:
+
+1. **Choose the Right Location:** Most vegetables and flowers need about 6 hours of full sun each day. Observe your yard to find the sunniest spot.
+
+2. **Pick Your Plants:** Some plants are easier to grow than others. For beginners, vegetables like lettuce, peppers, tomatoes, and cucumbers are a good start. If you want to plant flowers, marigolds, cosmos, sunflowers and zinnias are quite hardy and easy to care for.
+
+3. **Start with Good Soil:** Plants grow best in rich, crumbly loam soil that provides good drainage. If your soil is heavy clay or sandy, you might need to amend it with organic matter.
+
+4. **Consider Containers or Raised Beds:** If your space is limited or your soil is poor, consider raised beds or containers. They allow you to control the soil and water drainage more effectively.
+
+5. **Water Wisely:** Water in the early morning or late evening when the sun is not so intense. Most plants like to stay evenly moist but not soaking wet.
+
+6. **Feed Your Plants:** Plants need to be fed to flourish. You can use a general-purpose fertilizer for most flower and vegetable gardens.
+
+Remember, patience is key with gardening. Not everything will be a success the first year, but with time, you'll learn what works for your space. Happy gardening!","The AI's response does not meet the requirements based on the criteria provided. While the AI provides a detailed and informative response, it does not ask any follow-up questions to the user's statement. The AI should have asked questions to engage the user further, such as ""What kind of plants are you thinking of growing?"" or ""Do you have a specific area in mind for your garden?"" or ""Have you gardened before or is this your first time?"". The AI's response lacks the necessary engagement and exploration of the topic in more detail.",
+sample9,2,I watched the latest Marvel movie.,What did you think about the character development in the film?,"That's great! The Marvel Cinematic Universe has a fantastic lineup of superhero movies. Each film tends to be filled with action, drama, and humor, all while building upon a larger narrative that spans across multiple movies. If you enjoyed the latest one, you might want to consider watching some of the others if you haven't already. 
+
+If you'd like to discuss specific aspects of the movie, feel free to share your thoughts! Was there a particular scene that stood out to you or a character you found interesting? Let's chat about it.","The AI's response meets the criteria of generating contextually relevant follow-up questions. It provides a brief overview of the Marvel Cinematic Universe, which is relevant to the user's input about watching the latest Marvel movie. The AI then asks the user if there was a particular scene or character that stood out to them, which is a clear understanding of the user's previous statement and prompts further engagement and exploration of the topic in more detail. The tone is consistent and human-like, and the AI does not ask too many questions.",
+sample10,2,I'm reading '1984' by George Orwell.,What do you think of the author's portrayal of society in '1984' so far?,"That's a great choice! ""1984"" by George Orwell is a classic novel that explores themes of totalitarianism, surveillance, and censorship. Its protagonist, Winston Smith, is a man struggling for freedom in a society ruled by an oppressive government known as ""The Party"", led by the enigmatic Big Brother. 
+
+As you read, you may find Orwell's vision of a dystopian future both disturbing and thought-provoking. The book raises important questions about power, manipulation, and the nature of reality itself. It's a challenging read, but it offers a lot of food for thought!
+
+Enjoy your reading, and don't hesitate to share your thoughts or ask any questions. I'm here to help!","The AI's response does not meet the requirements. While the AI provides a detailed and contextually relevant response to the user's statement about reading '1984' by George Orwell, it does not generate any follow-up questions. The response does not prompt further engagement or exploration of the topic in more detail. Therefore, the AI's response fails to meet the criteria of generating contextually relevant follow-up questions.",
