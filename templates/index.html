@@ -1,10 +1,10 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Modern Chat Interface</title>
     <style>
+        /* (Styles remain the same as your modern sleek design) */
         /* Reset CSS */
         * {
             margin: 0;
@@ -24,6 +24,20 @@
             padding: 20px 0;
             background-color: #27293d;
             font-weight: normal;
+            position: relative;
+        }
+        #new-chat-button {
+            position: absolute;
+            right: 20px;
+            top: 25px;
+            background-color: transparent;
+            border: none;
+            color: #4f8bf9;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #new-chat-button:hover {
+            text-decoration: underline;
         }
         #chat-container {
             flex-grow: 1;
@@ -121,7 +135,10 @@
     </style>
 </head>
 <body>
-    <h1>Chat Interface</h1>
+    <h1>
+        Chat Interface
+        <button id="new-chat-button" onclick="startNewChat()">New Chat</button>
+    </h1>
     <div id="chat-container"></div>
     <div id="input-container">
         <input type="text" id="message-input" placeholder="Type your message...">
@@ -198,7 +215,26 @@
             chatContainer.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
         }
+
+        async function startNewChat() {
+            try {
+                const response = await fetch('/new_chat', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    sessionId = data.session_id;
+                    // Clear chat container
+                    chatContainer.innerHTML = '';
+                    errorDiv.textContent = '';
+                } else {
+                    throw new Error(data.error || 'Failed to start a new chat');
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                console.error('Error:', error);
+            }
+        }
     </script>
 </body>
 </html>
-
