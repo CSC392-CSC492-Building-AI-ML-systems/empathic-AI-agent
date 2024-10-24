@@ -1,0 +1,81 @@
+ID,User_Story,User_Input,Expected_Response,Actual_Response,Status,Emotion
+sample1,1,Book a meeting for me tomorrow.,Do you mean scheduling a meeting with your team or someone else tomorrow?,"Can you please provide more details about the meeting such as the time, location, and who should be invited?",Failed,
+sample2,1,I need help with my account.,"Are you referring to accessing your account, updating your information, or something else?",Could you please specify the type of account and the nature of help you require?,Failed,
+sample3,1,Can you send that report?,Could you specify which report you’d like me to send?,Can you please specify which report you are referring to and to whom it should be sent?,Failed,
+sample4,1,Plan a trip.,"Are you looking to plan a vacation, a business trip, or something else?","Can you please provide more details about the trip such as the destination, duration, number of people, and budget?",Failed,
+sample5,1,I want to change settings.,"Which settings would you like to change? For example, display settings or notification preferences?",Could you specify which settings you want to change and in what application or device?,Failed,
+sample6,2,I've been trying to learn Python.,What aspects of Python are you focusing on right now?,"That's great! Python is a versatile language and a good choice for beginners due to its readability and simplified syntax. There are many resources available online to help you learn Python. Websites like Codecademy, Coursera, and edX offer interactive Python courses. Books like ""Learn Python the Hard Way"" by Zed Shaw and ""Python Crash Course"" by Eric Matthes are also good resources. Remember, the key to learning programming is practice, so try to code a little every day. Happy coding!",Failed,
+sample7,2,I just adopted a new puppy.,That's exciting! How is your puppy adjusting to its new home?,"That's wonderful! Congratulations on your new furry friend. As a new pet parent, remember to provide your puppy with a balanced diet, regular exercise, and lots of love. It's also important to start training early to help your puppy understand basic commands and house rules. Regular visits to the vet for vaccinations and check-ups are also essential to ensure your puppy's health. Enjoy the joy and companionship your new puppy will bring to your life!",Failed,
+sample8,2,I'm planning to start a garden this spring.,What types of plants are you considering for your garden?,"That sounds like a fantastic idea! Gardening can be a very fulfilling activity. Start by deciding what you would like to grow - vegetables, flowers, or a combination of both. If you're a beginner, you might want to start with plants that are easy to grow in your region. 
+
+Next, choose the right spot for your garden - most plants need lots of sunlight to grow well. You'll also need to prepare the soil by adding compost or other organic matter to provide your plants with the nutrients they need. 
+
+Remember to water your plants regularly, but be careful not to overwater. Lastly, be patient. Gardening is a process that requires time and patience, but the rewards are well worth it. Happy gardening!",Failed,
+sample9,2,I watched the latest Marvel movie.,What did you think about the character development in the film?,"That's awesome! Marvel movies are known for their thrilling action, engaging storylines, and memorable characters. Without revealing any spoilers, I hope you enjoyed the film. Marvel has an extensive lineup of upcoming movies and series, so there's much more to look forward to. If you're interested in discussing the film or learning more about the Marvel Cinematic Universe, there are many online forums and communities where fans share their thoughts and theories.",Failed,
+sample10,2,I'm reading '1984' by George Orwell.,What do you think of the author's portrayal of society in '1984' so far?,"That's a classic choice! '1984' by George Orwell is a seminal work in the dystopian genre. The book offers a profound exploration of societal control and individual freedoms, concepts that are still relevant today. As you read, you might notice its influence on a lot of modern media and discussions about surveillance and privacy. Enjoy the read, and remember: ""Big Brother is watching you.""",Failed,
+sample11,3,I’m feeling overwhelmed.,"I’m sorry to hear that. If you’d like to talk more about it, I’m here to listen whenever you’re ready.","I'm really sorry that you're feeling this way, but I'm unable to provide the help that you need. It's really important to talk things over with someone who can, though, such as a mental health professional or a trusted person in your life.",Failed,Overwhelmed
+sample12,3,I'm so frustrated with my internet connection.,I'm sorry you're experiencing that. Can I help troubleshoot the issue with you?,"I'm sorry to hear that you're having issues with your internet connection. It can indeed be very frustrating. Here are a few steps you can try to resolve the issue:
+
+1. Restart your modem and router: This can often fix minor glitches by clearing the device's memory and allowing updates to install.
+2. Check your internet speed: Use an online service like Ookla's Speedtest to make sure you're getting the speed you're paying for. 
+3. Limit the number of devices connected: Too many devices connected at once can slow down your internet speed.
+4. Position your router correctly: Keep your router in a central location and away from walls and obstructions for better signal strength.
+5. Contact your internet service provider: If none of the above steps work, it may be time to contact your ISP. There could be an outage or other issue that they need to fix. 
+
+Remember, sometimes the problem can be with the website you're trying to access, not your internet connection. Try accessing multiple websites to see if the problem is widespread before troubleshooting your connection.",Failed,Frustrated
+sample13,3,I've been feeling really down lately.,I'm sorry you're feeling this way. Would you like to talk more about what's been bothering you?,"I'm really sorry that you're feeling this way, but I'm unable to provide the help that you need. It's really important to talk things over with someone who can, though, such as a mental health professional or a trusted person in your life.",Failed,Down
+sample14,3,I'm anxious about my upcoming exams.,I'm sorry to hear that. Maybe we can discuss some study strategies to help ease your anxiety?,"I'm sorry to hear that you're feeling anxious about your exams. It's completely normal to feel this way, but remember, anxiety doesn't reflect your capabilities or potential. Here are a few tips that might help:
+
+1. Create a Study Schedule: Plan your study time in advance. Break your study material into manageable chunks and tackle them one at a time.
+
+2. Practice with Past Exams: This can give you a feel of the exam format and help you manage your time effectively.
+
+3. Stay Healthy: Eat a balanced diet, get regular exercise, and ensure you're getting enough sleep. These can have a significant impact on your ability to concentrate and retain information.
+
+4. Take Breaks: Don't forget to give yourself short breaks during study sessions. They can help refresh your mind and increase your productivity.
+
+5. Relaxation Techniques: Techniques such as deep breathing, meditation, and yoga can help reduce stress and anxiety.
+
+Remember, it's okay to reach out to a counselor or trusted adult if your anxiety feels overwhelming. You're not alone, and there are people who want to help. Good luck with your exams, you've got this!",Failed,Anxious
+sample15,3,I lost my wallet today.,I'm really sorry that happened. Do you need assistance with reporting it or replacing any items?,"I'm sorry to hear that you've lost your wallet. That can be a stressful situation. Here are the steps you should take immediately:
+
+1. Retrace Your Steps: Try to remember the last place you had your wallet. It's possible it could still be there.
+
+2. Report the Loss: Contact the local police and report your lost wallet. While they may not be able to retrieve it, it's crucial to have a record of the loss.
+
+3. Contact Your Bank: If you had debit or credit cards in your wallet, contact your bank immediately to report them lost or stolen. They will cancel your cards and issue new ones.
+
+4. Replace Your Driver's License: Visit your local DMV to report your lost license and apply for a replacement.
+
+5. Monitor Your Accounts: Keep an eye on your bank and credit card accounts for any fraudulent activity.
+
+6. Replace Other Important Cards: If you had other important cards in your wallet, such as insurance cards or membership cards, contact the respective companies to report them lost and request replacements.
+
+Remember, while losing your wallet is inconvenient and stressful, taking these steps will help protect your identity and finances.",Failed,Worried
+sample16,4,Schedule a dentist appointment next Monday.,"I apologize, I didn’t catch that correctly. Did you mean scheduling a dental appointment or something else?",Can you please provide more details such as the preferred time for the appointment and the name of the dentist or clinic?,Failed,
+sample17,4,Find me a good Italian restaurant nearby.,"I'm sorry, I may have misunderstood. Are you looking for Italian restaurants in your current location?","Sure, I found a few highly rated Italian restaurants near you:
+
+1. [Paesano Ristorante Italiano](https://www.yelp.com/search?find_desc=italian+restaurants+near+me&find_loc=San+Jose,+CA) - Known for its authentic Italian cuisine.
+
+2. [Rollati Ristorante](https://www.opentable.com/cuisine/best-italian-restaurants-san-jose-ca) - Rollati's menu is a love letter to Italian-American cuisine, embracing the iconic dishes of Italy's many regions.
+
+3. Milan - An upscale dining experience with a diverse menu.
+
+4. Sorelle Italian Bistro - A family-friendly option with a cozy atmosphere.
+
+5. Italian Brothers Restaurant - Known for its pizza and pasta dishes.
+
+6. Palermo Italian Restaurant - Offers a blend of traditional and innovative Italian dishes.
+
+7. Maggiano's Little Italy - A popular chain serving classic Italian fare.
+
+8. Locanda Sorrento - Renowned for its authentic Italian recipes and fine wines.
+
+9. Trattoria 360 - Offers a variety of pasta, seafood, and meat dishes.
+
+10. Giorgio's Italian Food San Jose - A local favorite for pizza and pasta.
+
+Please note that availability and operating hours may vary, so it's a good idea to check their websites or call ahead. Enjoy your meal!",Failed,
+sample18,4,Set a reminder for my meeting.,I apologize for the confusion. Could you specify the time and date for the meeting reminder?,"Can you please provide more details about the meeting such as the date, time, and any specific details for the reminder?",Failed,
+sample19,4,Play some music.,"I'm sorry, could you let me know what genre or artist you'd like to listen to?",Could you please specify the type of music or the artist you want to listen to?,Failed,
+sample20,4,Help me with my taxes.,"I apologize, I didn’t understand completely. Are you looking for information on filing taxes or assistance with a specific tax-related issue?","Could you please specify what exactly you need help with regarding your taxes? Are you looking for guidance on how to file, or do you have specific questions about tax deductions or credits?",Failed,
