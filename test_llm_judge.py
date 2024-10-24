@@ -3,6 +3,7 @@ from langchain_openai import ChatOpenAI
 from dotenv import load_dotenv
 import pandas as pd
 from app import App  # Import your AI application class from app.py
+import time
 
 # Load your OpenAI API key from environment variables
 load_dotenv()
@@ -97,7 +98,7 @@ Please provide your evaluation."""
 def run_tests_and_save_results(input_csv_path, app, session_id):
     # Load test cases from input CSV, ignoring the Notes column
     print(f"Loading test cases from {input_csv_path}...")
-    test_cases = pd.read_csv(input_csv_path, nrows=10) # Only read the first 10 rows
+    test_cases = pd.read_csv(input_csv_path)
     print(f"Loaded {len(test_cases)} test cases.")
 
     # Prepare a list to store results
@@ -130,6 +131,10 @@ def run_tests_and_save_results(input_csv_path, app, session_id):
             "Evaluation": evaluation,
             "Emotion": emotion
         })
+        # Pause for 1 minute after every 10 samples
+        if (index + 1) % 10 == 0:
+            print("Processed 10 samples, sleeping for 1 minute...")
+            time.sleep(60)  # Sleep for 60 seconds
 
     # Convert results to DataFrame
     results_df = pd.DataFrame(results)
