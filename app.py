@@ -120,31 +120,31 @@ class App:
         self._tools = [TavilySearchResults(max_results=2)]
         self._memory = MemorySaver()
 
-        self._pipeline = DataPipeline()
-        self._agent1_executer = create_react_agent(
+        # self._pipeline = DataPipeline()
+        self._agent1_executor = create_react_agent(
             self._model, self._tools, state_modifier=prompt1,
             checkpointer=self._memory)
-        self._agent2_executer = create_react_agent(
+        self._agent2_executor = create_react_agent(
             self._model, self._tools, state_modifier=prompt2,
             checkpointer=self._memory)
-        self._agent3_executer = create_react_agent(
+        self._agent3_executor = create_react_agent(
             self._model, self._tools, state_modifier=prompt3,
             checkpointer=self._memory)
-        self._agent4_executer = create_react_agent(
+        self._agent4_executor = create_react_agent(
             self._model, self._tools, state_modifier=prompt4,
             checkpointer=self._memory)
 
     def submit_message(self, message: str, session_id: str) -> str:
         config = {"configurable": {"thread_id": session_id}}
         
-        self._pipeline.add_message("user", message, session_id)
+        # self._pipeline.add_message("user", message, session_id)
 
         if session_id not in chat_histories:
             chat_histories[session_id] = []
 
         chat_histories[session_id].append({"role": "user", "content": message})
         
-        response1 = self._agent1_executer.invoke(
+        response1 = self._agent1_executor.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
 
         messages = [HumanMessage(content=msg["content"]) for msg in chat_histories[session_id]]
@@ -170,13 +170,13 @@ class App:
 
         # Note that this agent receives the user input only,
         # without the clarification result.
-        response3 = self._agent3_executer.invoke(
+        response3 = self._agent3_executor.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
 
         empathy_agent_response = response3['messages'][-1].content
         print(empathy_agent_response)
 
-        response4 = self._agent4_executer.invoke(
+        response4 = self._agent4_executor.invoke(
             {"messages": [
                 HumanMessage(
                     content=question_gen_response + empathy_agent_response)
@@ -187,13 +187,13 @@ class App:
         
         final_response = response4['messages'][-1].content
         
-        self._pipeline.add_message("system", response4, session_id)
+        # self._pipeline.add_message("system", response4, session_id)
         
         chat_histories[session_id].append({"role": "system", "content": final_response})
 
         return final_response
 
-chat_app = ChatApp()
+chat_app = App()
 
 @app.route('/')
 def home():
