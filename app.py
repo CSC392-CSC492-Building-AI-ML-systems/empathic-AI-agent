@@ -1,5 +1,5 @@
+from flask import Flask, render_template, request, jsonify
 import os
-
 from dotenv import load_dotenv
 from langchain_core.tools import BaseTool
 from langchain_openai import ChatOpenAI
@@ -11,10 +11,14 @@ from langgraph.checkpoint.memory import MemorySaver
 from data_pipeline import DataPipeline
 from utilities import generate_random_session_id
 
+app = Flask(__name__)
 load_dotenv()  # Load environment variables from .env file
 LANGCHAIN_API_KEY = os.getenv('LANGCHAIN_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY')
+
+# for now, store chat history as a dict
+chat_histories = {}
 
 # First prompt to determine if clarification is needed
 prompt1 = '''
@@ -37,10 +41,10 @@ You are an assistant that provides information based on the user's request.
 You will receive input in one of two formats:
 
 1. A user query followed by "NO_CLARIFICATION_NEEDED"
-   In this case, provide a detailed response to the user's query.
+In this case, provide a detailed response to the user's query.
 
 2. A user query followed by "CLARIFICATION_NEEDED: [question]"
-   In this case, ask the clarifying question provided.
+In this case, ask the clarifying question provided.
 
 Maintain a conversational tone and ensure your response is appropriate 
 to the input received.
@@ -111,6 +115,7 @@ class App:
     _agent4_executor: CompiledGraph  # Synthesis agent
 
     def __init__(self):
+        load_dotenv()
         self._model = ChatOpenAI(model="gpt-4")
         self._tools = [TavilySearchResults(max_results=2)]
         self._memory = MemorySaver()
@@ -134,19 +139,32 @@ class App:
         
         self._pipeline.add_message("user", message, session_id)
 
+        if session_id not in chat_histories:
+            chat_histories[session_id] = []
+
+        chat_histories[session_id].append({"role": "user", "content": message})
+        
         response1 = self._agent1_executer.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
 
+        messages = [HumanMessage(content=msg["content"]) for msg in chat_histories[session_id]]
+
         clarification_result = response1["messages"][-1].content
 
-        response2 = self._agent2_executer.invoke(
-            {
-                "messages": [
-                    HumanMessage(content=message + clarification_result)
-                             ]
-            },
+
+        chat_histories[session_id].append({"role": "system", "content": clarification_result})
+
+        combined_message = message + clarification_result
+
+        response2 = self._agent2_executor.invoke(
+            {"messages": [HumanMessage(content=combined_message)]},
             config
         )
+
+
+
+        
+        
         question_gen_response = response2['messages'][-1].content
         print(question_gen_response)
 
@@ -167,19 +185,47 @@ class App:
             config
         )
         
+        final_response = response4['messages'][-1].content
+        
         self._pipeline.add_message("system", response4, session_id)
+        
+        chat_histories[session_id].append({"role": "system", "content": final_response})
 
-        return response4['messages'][-1].content
+        return final_response
 
+chat_app = ChatApp()
 
-# Sample use of the app
-if __name__ == "__main__":
-    app = App()
-    curr_session_id = generate_random_session_id()
+@app.route('/')
+def home():
+    return render_template('index.html')
 
-    print("=== WELCOME TO CHAT APP ===")
-    while True:
-        message = input("ME: ")
-        response = app.submit_message(message, curr_session_id)
-        print("SYSTEM: " + response)
-        app._pipeline.get_full_chat_history(curr_session_id, "output.txt")
+@app.route('/submit', methods=['POST'])
+def submit():
+    data = request.json
+    message = data.get('message')
+    session_id = data.get('session_id')
+
+    if not session_id:
+        session_id = generate_random_session_id()
+
+    try:
+        response = chat_app.submit_message(message, session_id)
+        return jsonify({'response': response, 'session_id': session_id})
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/new_chat', methods=['POST'])
+def new_chat():
+    session_id = generate_random_session_id()
+    return jsonify({'session_id': session_id})
+
+if __name__ == '__main__':
+    app.run(debug=True)
+    
+#     print(chat_histories)
+#     print("=== WELCOME TO CHAT APP ===")
+#     while True:
+#         message = input("ME: ")
+#         response = app.submit_message(message, curr_session_id)
+#         print("SYSTEM: " + response)
+#         app._pipeline.get_full_chat_history(curr_session_id, "output.txt")

@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Modern Chat Interface</title>
+    <style>
+        /* (Styles remain the same as your modern sleek design) */
+        /* Reset CSS */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #1e1e2f;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+        h1 {
+            text-align: center;
+            padding: 20px 0;
+            background-color: #27293d;
+            font-weight: normal;
+            position: relative;
+        }
+        #new-chat-button {
+            position: absolute;
+            right: 20px;
+            top: 25px;
+            background-color: transparent;
+            border: none;
+            color: #4f8bf9;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #new-chat-button:hover {
+            text-decoration: underline;
+        }
+        #chat-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #1e1e2f;
+        }
+        .message {
+            margin-bottom: 20px;
+            max-width: 60%;
+            line-height: 1.5;
+            word-wrap: break-word;
+            position: relative;
+            padding: 15px 20px;
+            border-radius: 20px;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+        .user-message {
+            background-color: #4f8bf9;
+            margin-left: auto;
+            margin-right: 20px;
+            text-align: right;
+        }
+        .system-message {
+            background-color: #2a2a40;
+            margin-left: 20px;
+            margin-right: auto;
+            text-align: left;
+        }
+        #input-container {
+            display: flex;
+            padding: 10px 20px;
+            background-color: #27293d;
+        }
+        #message-input {
+            flex-grow: 1;
+            padding: 15px 20px;
+            border: none;
+            border-radius: 30px;
+            outline: none;
+            font-size: 16px;
+            background-color: #1e1e2f;
+            color: #fff;
+        }
+        #message-input::placeholder {
+            color: #ccc;
+        }
+        #send-button {
+            padding: 0 20px;
+            margin-left: 10px;
+            background-color: #4f8bf9;
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 16px;
+            outline: none;
+            transition: background-color 0.3s;
+        }
+        #send-button:hover {
+            background-color: #407dd4;
+        }
+        #send-button:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+        }
+        #error {
+            color: #f44336;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #27293d;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        /* Scrollbar styling */
+        #chat-container::-webkit-scrollbar {
+            width: 8px;
+        }
+        #chat-container::-webkit-scrollbar-thumb {
+            background-color: #444;
+            border-radius: 4px;
+        }
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .message {
+                max-width: 80%;
+            }
+            #message-input, #send-button {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>
+        Chat Interface
+        <button id="new-chat-button" onclick="startNewChat()">New Chat</button>
+    </h1>
+    <div id="chat-container"></div>
+    <div id="input-container">
+        <input type="text" id="message-input" placeholder="Type your message...">
+        <button onclick="sendMessage()" id="send-button">Send</button>
+    </div>
+    <div id="error"></div>
+
+    <script>
+        let sessionId = null;
+        const chatContainer = document.getElementById('chat-container');
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const errorDiv = document.getElementById('error');
+
+        messageInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        async function sendMessage() {
+            const message = messageInput.value.trim();
+            if (!message) return;
+
+            // Disable input and button while processing
+            messageInput.disabled = true;
+            sendButton.disabled = true;
+
+            // Add user message to chat
+            addMessage(message, 'user');
+            messageInput.value = '';
+
+            try {
+                const response = await fetch('/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        session_id: sessionId
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    sessionId = data.session_id;
+                    addMessage(data.response, 'system');
+                    errorDiv.textContent = '';
+                } else {
+                    throw new Error(data.error || 'An error occurred');
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                console.error('Error:', error);
+            } finally {
+                // Re-enable input and button
+                messageInput.disabled = false;
+                sendButton.disabled = false;
+                messageInput.focus();
+            }
+        }
+
+        function addMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${type}-message`;
+
+            // Create message content
+            const messageContent = document.createElement('span');
+            messageContent.textContent = message;
+            messageDiv.appendChild(messageContent);
+
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+
+        async function startNewChat() {
+            try {
+                const response = await fetch('/new_chat', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    sessionId = data.session_id;
+                    // Clear chat container
+                    chatContainer.innerHTML = '';
+                    errorDiv.textContent = '';
+                } else {
+                    throw new Error(data.error || 'Failed to start a new chat');
+                }
+            } catch (error) {
+                errorDiv.textContent = error.message;
+                console.error('Error:', error);
+            }
+        }
+    </script>
+</body>
+</html>
