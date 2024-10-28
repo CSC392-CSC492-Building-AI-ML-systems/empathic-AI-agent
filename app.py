@@ -8,7 +8,9 @@ from langchain_community.tools.tavily_search import TavilySearchResults
 from langgraph.graph.graph import CompiledGraph
 from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
+from data_pipeline import DataPipeline
 from utilities import generate_random_session_id
+
 
 load_dotenv()  # Load environment variables from .env file
 LANGCHAIN_API_KEY = os.getenv('LANGCHAIN_API_KEY')
@@ -99,8 +101,7 @@ If no clarification is needed, combine the detailed response with the context
 and tone from the empathy agent to deliver a well-rounded and sensitive reply.
 '''
 
-
-class App:
+class App:    
     _model: ChatOpenAI
     _tools: list[BaseTool]
     _memory: MemorySaver
@@ -113,6 +114,7 @@ class App:
         self._model = ChatOpenAI(model="gpt-4")
         self._tools = [TavilySearchResults(max_results=2)]
         self._memory = MemorySaver()
+        self._pipeline = DataPipeline()
         self._agent1_executer = create_react_agent(
             self._model, self._tools, state_modifier=prompt1,
             checkpointer=self._memory)
@@ -128,6 +130,8 @@ class App:
 
     def submit_message(self, message: str, session_id: str) -> str:
         config = {"configurable": {"thread_id": session_id}}
+        
+        self._pipeline.add_message("user", message, session_id)
 
         response1 = self._agent1_executer.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
@@ -161,6 +165,8 @@ class App:
             },
             config
         )
+        
+        self._pipeline.add_message("system", response4, session_id)
 
         return response4['messages'][-1].content
 
@@ -174,4 +180,4 @@ if __name__ == "__main__":
     while True:
         message = input("ME: ")
         response = app.submit_message(message, curr_session_id)
-        print("SYSTEM: " + response)
+        app._pipeline.get_full_chat_history(curr_session_id, "output.txt")
