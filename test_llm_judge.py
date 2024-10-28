@@ -6,6 +6,8 @@ from langchain_openai import ChatOpenAI
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from app import App  # Import AI application class from app.py
 from utilities import generate_random_session_id
+import random
+import re
 
 load_dotenv()
 
@@ -15,64 +17,98 @@ chat = ChatOpenAI(
     temperature=0  # You can adjust temperature for variability in responses
 )
 
-def evaluate_with_openai(user_story, user_input, actual_response):
+def evaluate_with_openai(user_story, user_input, actual_response, max_retries=5):
     """
     Uses OpenAI to evaluate the AI's actual response based on the user story acceptance criteria.
     """
     # Define the prompts for each user story
     prompts = {
-        1: f"""Please evaluate the following conversation based on the criteria of detecting ambiguity and asking clarifying follow-up questions. Score each category from 0 to 3.
+        1: f"""Evaluate the AI's response for detecting ambiguity and asking clarifying questions. Score each category from 0-3 based on the criteria below.
 
 User input: "{user_input}"
 AI's response: "{actual_response}"
 
-Criteria:
-- Clarity: Does the response clearly address the user input without ambiguities? (0: No clarity, 3: Very clear)
-- Follow-Up Questions: Does the AI ask targeted follow-up questions to clarify user intent? (0: No follow-up questions, 3: Highly relevant follow-up questions)
+- Clarity (0-3): How clearly does the AI address the user input?
+    - 0: Off-topic or unclear.
+    - 1: Some relevance, lacks clarity.
+    - 2: Mostly clear, minor gaps.
+    - 3: Very clear, directly addresses input.
 
-Please provide your response in this format:
+- Follow-Up (0-3): How well does the AI ask relevant follow-up questions?
+    - 0: No follow-up.
+    - 1: Vague or unrelated question.
+    - 2: Mostly relevant.
+    - 3: Clear, focused follow-up.
+
+Response format:
 Clarity: X
-Follow-Up Questions: Y
+Follow-Up: Y
 Total Score: Z""",
 
-        2: f"""Please evaluate the following conversation based on the criteria of generating contextually relevant follow-up questions. Score each category from 0 to 3.
+        2: f"""Evaluate for contextually relevant follow-up questions, scoring each category from 0-3.
 
 User input: "{user_input}"
 AI's response: "{actual_response}"
 
-Criteria:
-- Relevance: Does the response accurately address the user's input? (0: Off-topic, 3: Fully relevant)
-- Engagement: Does the AI generate appropriate follow-up questions to deepen the conversation? (0: No engagement, 3: Highly engaging)
+- Relevance (0-3): How well does the AI respond to user input?
+    - 0: Off-topic.
+    - 1: Partially relevant.
+    - 2: Mostly relevant, minor gaps.
+    - 3: Fully relevant and direct.
 
-Please provide your response in this format:
+- Engagement (0-3): How engaging is the follow-up?
+    - 0: None.
+    - 1: Minimal engagement.
+    - 2: Somewhat engaging.
+    - 3: Highly engaging, deepens conversation.
+
+Response format:
 Relevance: X
 Engagement: Y
 Total Score: Z""",
 
-        3: f"""Please evaluate the following conversation based on the criteria of detecting emotional cues and responding with supportive language. Score each category from 0 to 4.
+        3: f"""Evaluate the AI’s response for detecting emotional cues and support, scoring each category from 0-4.
 
 User input: "{user_input}"
 AI's response: "{actual_response}"
 
-Criteria:
-- Empathy: Does the AI recognize and respond to emotional cues effectively? (0: No recognition, 4: Excellent recognition)
-- Supportiveness: Does the AI offer appropriate support and follow-up assistance? (0: No support, 4: Highly supportive)
+- Empathy (0-4): How well does the AI detect and respond to emotions?
+    - 0: No acknowledgment.
+    - 1: Minimal acknowledgment.
+    - 2: Some recognition.
+    - 3: Strong recognition.
+    - 4: Fully acknowledges and responds empathetically.
 
-Please provide your response in this format:
+- Supportiveness (0-4): How supportive is the AI?
+    - 0: No support.
+    - 1: Minimal support.
+    - 2: Some support.
+    - 3: Supportive, uses empathy.
+    - 4: Very supportive, offers help.
+
+Response format:
 Empathy: X
 Supportiveness: Y
 Total Score: Z""",
 
-        4: f"""Please evaluate the following conversation based on the criteria of detecting misunderstandings and handling them politely. Score each category from 0 to 3.
+        4: f"""Evaluate the AI’s handling of misunderstandings, scoring each category from 0-3.
 
 User input: "{user_input}"
 AI's response: "{actual_response}"
 
-Criteria:
-- Politeness: Does the AI maintain a polite and respectful tone throughout the interaction? (0: Rude, 3: Consistently polite)
-- Correction Handling: Does the AI acknowledge misunderstandings and respond appropriately? (0: No acknowledgment, 3: Fully acknowledges and clarifies)
+- Politeness (0-3): How polite is the AI?
+    - 0: Rude.
+    - 1: Polite but forced.
+    - 2: Mostly polite.
+    - 3: Very polite.
 
-Please provide your response in this format:
+- Correction Handling (0-3): How well does the AI handle misunderstandings?
+    - 0: Ignores or repeats error.
+    - 1: Acknowledges but lacks clarity.
+    - 2: Acknowledges and partially corrects.
+    - 3: Fully acknowledges and corrects politely.
+
+Response format:
 Politeness: X
 Correction Handling: Y
 Total Score: Z"""
@@ -91,60 +127,97 @@ Total Score: Z"""
     if not prompt:
         return "User story not found"
 
-    # Use ChatOpenAI's invoke method to generate a response
-    try:
-        response = chat.invoke(prompt)
-        return response.content.strip()
-    except Exception as e:
-        return f"Error: {str(e)}"
-
-def parse_scores(evaluation, user_story):
-    scores = {}
-    try:
-        for line in evaluation.split("\n"):
-            if ":" in line:
-                key, value = line.split(":", 1)  # Split on the first colon only
-                key = key.strip()
-                value = value.strip()
-                
-                # Ensure value is an integer
-                try:
-                    scores[key] = int(value)
-                except ValueError:
-                    continue
+    attempt = 0
+    while attempt < max_retries:
+        try:
+            # Use ChatOpenAI's invoke method to generate a response
+            response = chat.invoke(prompt)
+            return response.content.strip()
         
-        # Calculate the total score if it's not explicitly included
-        if "Total Score" not in scores:
-            scores["Total Score"] = sum(value for key, value in scores.items() if isinstance(value, int))
+        except Exception as e:
+            error_message = str(e).lower()
+            
+            # Check for rate limit or similar errors
+            if re.search(r"rate limit|429|rate_limit_exceeded|tokens per min", error_message):
+                # Exponential backoff with randomized delay
+                wait_time = (2 ** attempt) + random.uniform(0.5, 1.5)
+                print(f"Rate limit error in evaluation. Retrying in {wait_time:.2f} seconds... (Attempt {attempt + 1})")
+                time.sleep(wait_time)
+                attempt += 1
+            else:
+                # Log and return a non-rate-limit error message
+                print(f"Non-rate-limit error in evaluation: {e}")
+                return f"Error: Non-rate-limit error: {str(e)}"
 
-    except Exception as e:
-        print(f"Error parsing scores: {e}")
-        return {"Error": str(e)}
+    # If max retries are exhausted due to rate limits, return a standardized message
+    print(f"Failed to complete evaluation after {max_retries} attempts due to rate limit.")
+    return "Evaluation failed due to repeated rate limits"
 
-    return scores
-
-def process_test_case(row, app, session_id):
+def process_test_case(row, app, session_id, max_retries=5):
+    """
+    Processes a single test case by sending the input to the AI and evaluating the response.
+    Retries if a rate limit error occurs, with extended backoff and random delay.
+    """
     user_story = row['User_Story']
     user_input = row['User_Input']
     expected_response = row['Expected_Response']
     emotion = row.get('Emotion', None)
 
-    actual_response = app.submit_message(user_input, session_id)
-    evaluation = evaluate_with_openai(user_story, user_input, actual_response)
+    attempt = 0
 
-    # Parse scores specific to the user story
-    scores = parse_scores(evaluation, user_story)
+    while attempt < max_retries:
+        try:
+            # Get actual response from AI
+            actual_response = app.submit_message(user_input, session_id)
+            
+            # Use OpenAI to evaluate the response based on the user story
+            evaluation = evaluate_with_openai(user_story, user_input, actual_response)
+            
+            # Prepare the result to be written to the CSV
+            return {
+                "ID": row["ID"],
+                "User_Story": user_story,
+                "User_Input": user_input,
+                "Expected_Response": expected_response,
+                "Actual_Response": actual_response,
+                "Evaluation": evaluation,
+                "Emotion": emotion
+            }
+        
+        except Exception as e:
+            error_message = str(e).lower()
+            
+            # Check for rate limit error using a more comprehensive pattern match
+            if re.search(r"rate limit|429|rate_limit_exceeded|tokens per min", error_message):
+                # Exponential backoff with a random factor to avoid synchronized retries
+                wait_time = (2 ** attempt) + random.uniform(0.5, 1.5)  # Randomized delay
+                print(f"Rate limit error. Retrying in {wait_time:.2f} seconds... (Attempt {attempt + 1})")
+                time.sleep(wait_time)
+                attempt += 1
+            else:
+                # Log and return a standard error message for non-rate-limit errors
+                print(f"Non-rate-limit error processing test case: {e}")
+                return {
+                    "ID": row["ID"],
+                    "User_Story": user_story,
+                    "User_Input": user_input,
+                    "Expected_Response": expected_response,
+                    "Actual_Response": None,
+                    "Evaluation": f"Error: Non-rate-limit error: {str(e)}",
+                    "Emotion": emotion
+                }
 
+    # If max retries reached due to rate limits, log and return a standardized message
+    print(f"Failed to process test case after {max_retries} attempts due to rate limit.")
     return {
         "ID": row["ID"],
         "User_Story": user_story,
         "User_Input": user_input,
         "Expected_Response": expected_response,
-        "Actual_Response": actual_response,
-        "Scores": scores,
+        "Actual_Response": None,
+        "Evaluation": "Failed due to repeated rate limits",
         "Emotion": emotion
     }
-
 
 def run_tests_and_save_results(input_csv_path, app):
     # Load test cases from input CSV, ignoring the Notes column
