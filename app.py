@@ -11,7 +11,6 @@ from langgraph.checkpoint.memory import MemorySaver
 from data_pipeline import DataPipeline
 from utilities import generate_random_session_id
 
-
 load_dotenv()  # Load environment variables from .env file
 LANGCHAIN_API_KEY = os.getenv('LANGCHAIN_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
@@ -107,6 +106,7 @@ class App:
     _memory: MemorySaver
     _agent1_executor: CompiledGraph
     _agent2_executor: CompiledGraph
+
     _agent3_executor: CompiledGraph  # Context comprehension and empathy agent
     _agent4_executor: CompiledGraph  # Synthesis agent
 
@@ -114,6 +114,7 @@ class App:
         self._model = ChatOpenAI(model="gpt-4")
         self._tools = [TavilySearchResults(max_results=2)]
         self._memory = MemorySaver()
+
         self._pipeline = DataPipeline()
         self._agent1_executer = create_react_agent(
             self._model, self._tools, state_modifier=prompt1,
@@ -180,4 +181,5 @@ if __name__ == "__main__":
     while True:
         message = input("ME: ")
         response = app.submit_message(message, curr_session_id)
+        print("SYSTEM: " + response)
         app._pipeline.get_full_chat_history(curr_session_id, "output.txt")
