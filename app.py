@@ -15,17 +15,15 @@ from utilities import generate_random_session_id
 from datetime import datetime
 
 app = Flask(__name__)
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()  
 
-# Retrieve API keys from environment variables
 LANGCHAIN_API_KEY = os.getenv('LANGCHAIN_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY')
 
-# Store chat histories with metadata
+# store chat histories
 chat_histories = {}
 
-# Initial Prompts
 prompt1 = '''
 Analyze the user's request and determine if it requires clarification 
 due to ambiguity.
@@ -111,8 +109,8 @@ class App:
     _memory: MemorySaver
     _agent1_executor: CompiledGraph
     _agent2_executor: CompiledGraph
-    _agent3_executor: CompiledGraph  # Context comprehension and empathy agent
-    _agent4_executor: CompiledGraph  # Synthesis agent
+    _agent3_executor: CompiledGraph 
+    _agent4_executor: CompiledGraph  
 
     def __init__(self):
         load_dotenv()
@@ -120,7 +118,6 @@ class App:
         self._tools = [TavilySearchResults(max_results=2)]
         self._memory = MemorySaver()
 
-        # Initialize agents with respective prompts
         self._agent1_executor = create_react_agent(
             self._model, self._tools, state_modifier=prompt1,
             checkpointer=self._memory)
@@ -138,13 +135,11 @@ class App:
         config = {"configurable": {"thread_id": session_id}}
         
         if session_id not in chat_histories:
-            # Initialize session with metadata
             chat_histories[session_id] = {
                 "created_at": datetime.utcnow().isoformat(),
                 "messages": []
             }
 
-        # Append user message
         chat_histories[session_id]["messages"].append({"role": "user", "content": message})
         
         # Agent 1: Determine if clarification is needed
@@ -153,10 +148,9 @@ class App:
 
         clarification_result = response1["messages"][-1].content
 
-        # Append system clarification
+
         chat_histories[session_id]["messages"].append({"role": "system", "content": clarification_result})
 
-        # Combine message with clarification result
         combined_message = message + clarification_result
 
         # Agent 2: Handle the actual response based on clarification
@@ -187,15 +181,13 @@ class App:
         
         final_response = response4['messages'][-1].content
         
-        # Append final system response
         chat_histories[session_id]["messages"].append({"role": "system", "content": final_response})
 
         return final_response
 
-# Initialize the chat application
 chat_app = App()
 
-# Routes
+
 
 @app.route('/')
 def home():
