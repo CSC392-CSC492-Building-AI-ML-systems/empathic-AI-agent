@@ -5,221 +5,170 @@
 <head>
     <meta charset="UTF-8">
     <title>Modern Chat Interface</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Optional: Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
-        /* Reset CSS */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
         body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #1e1e2f;
-            color: #fff;
+            background-color: #f8f9fa;
+            height: 100vh;
             display: flex;
             flex-direction: column;
-            height: 100vh;
         }
-        h1 {
-            text-align: center;
-            padding: 20px 0;
-            background-color: #27293d;
-            font-weight: normal;
+        header {
+            background-color: #343a40;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        #chat-container {
+            flex-grow: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background-color: #e9ecef;
+        }
+        .message {
+            max-width: 75%;
+            padding: 10px 15px;
+            border-radius: 15px;
+            margin-bottom: 10px;
             position: relative;
+            animation: fadeIn 0.5s;
         }
-        #toggle-sidebar {
-            position: absolute;
-            left: 20px;
-            top: 25px;
-            background-color: transparent;
+        .user-message {
+            background-color: #0d6efd;
+            color: white;
+            align-self: flex-end;
+            border-bottom-right-radius: 0;
+        }
+        .system-message {
+            background-color: #6c757d;
+            color: white;
+            align-self: flex-start;
+            border-bottom-left-radius: 0;
+        }
+        #input-container {
+            padding: 10px 20px;
+            background-color: #f1f3f5;
+            display: flex;
+            align-items: center;
+        }
+        #message-input {
+            flex-grow: 1;
+            border-radius: 50px;
+            padding: 10px 20px;
+            border: 1px solid #ced4da;
+            margin-right: 10px;
+        }
+        #send-button {
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
             border: none;
-            color: #4f8bf9;
+            background-color: #0d6efd;
+            color: white;
             font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             cursor: pointer;
+            transition: background-color 0.3s;
         }
-        #toggle-sidebar:hover {
-            text-decoration: underline;
+        #send-button:hover {
+            background-color: #0b5ed7;
         }
-        #new-chat-button {
-            position: absolute;
-            right: 20px;
-            top: 25px;
-            background-color: transparent;
-            border: none;
-            color: #4f8bf9;
-            font-size: 16px;
-            cursor: pointer;
+        #error {
+            color: red;
+            text-align: center;
+            padding: 5px;
         }
-        #new-chat-button:hover {
-            text-decoration: underline;
-        }
-        /* Sidebar styles */
+        /* Sidebar Styles */
         #sidebar {
             position: fixed;
+            top: 60px;
             left: 0;
-            top: 0;
             width: 250px;
-            height: 100%;
-            background-color: #27293d;
-            color: #fff;
+            height: calc(100% - 60px);
+            background-color: #343a40;
+            color: white;
             overflow-y: auto;
-            transform: translateX(-250px);
             transition: transform 0.3s ease-in-out;
-            padding: 20px;
-            box-shadow: 2px 0 5px rgba(0,0,0,0.5);
+            transform: translateX(-100%);
             z-index: 1000;
         }
         #sidebar.open {
             transform: translateX(0);
         }
-        #sidebar h2 {
-            margin-bottom: 20px;
-        }
         .session-item {
-            padding: 10px;
-            margin-bottom: 10px;
-            background-color: #1e1e2f;
-            border-radius: 5px;
+            padding: 10px 15px;
+            border-bottom: 1px solid #495057;
             cursor: pointer;
             transition: background-color 0.2s;
         }
         .session-item:hover {
-            background-color: #333;
+            background-color: #495057;
         }
-        /* Chat container adjustments */
-        #chat-container {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: #1e1e2f;
-            margin-left: 0;
-            transition: margin-left 0.3s ease-in-out;
-        }
-        #sidebar.open + #chat-container {
-            margin-left: 250px;
-        }
-        /* Message Styles */
-        .message {
-            margin-bottom: 20px;
-            max-width: 60%;
-            line-height: 1.5;
-            word-wrap: break-word;
-            position: relative;
-            padding: 15px 20px;
-            border-radius: 20px;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        .user-message {
-            background-color: #4f8bf9;
-            margin-left: auto;
-            margin-right: 20px;
-            text-align: right;
-        }
-        .system-message {
-            background-color: #2a2a40;
-            margin-left: 20px;
-            margin-right: auto;
-            text-align: left;
-        }
-        /* Input Container */
-        #input-container {
-            display: flex;
-            padding: 10px 20px;
-            background-color: #27293d;
-        }
-        #message-input {
-            flex-grow: 1;
-            padding: 15px 20px;
+        /* Toggle Sidebar Button */
+        #toggle-sidebar {
+            background: none;
             border: none;
-            border-radius: 30px;
-            outline: none;
-            font-size: 16px;
-            background-color: #1e1e2f;
-            color: #fff;
-        }
-        #message-input::placeholder {
-            color: #ccc;
-        }
-        #send-button {
-            padding: 0 20px;
-            margin-left: 10px;
-            background-color: #4f8bf9;
             color: white;
-            border: none;
-            border-radius: 30px;
+            font-size: 24px;
             cursor: pointer;
-            font-size: 16px;
-            outline: none;
-            transition: background-color 0.3s;
         }
-        #send-button:hover {
-            background-color: #407dd4;
-        }
-        #send-button:disabled {
-            background-color: #555;
-            cursor: not-allowed;
-        }
-        #error {
-            color: #f44336;
-            text-align: center;
-            padding: 10px 0;
-            background-color: #27293d;
-        }
-        /* Animations */
+        /* Fade-in Animation */
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Scrollbar styling */
-        #chat-container::-webkit-scrollbar {
-            width: 8px;
-        }
-        #chat-container::-webkit-scrollbar-thumb {
-            background-color: #444;
-            border-radius: 4px;
-        }
-        /* Responsive Design */
+        /* Responsive Adjustments */
         @media (max-width: 768px) {
-            .message {
-                max-width: 80%;
-            }
-            #message-input, #send-button {
-                font-size: 14px;
-            }
             #sidebar {
                 width: 200px;
-                transform: translateX(-200px);
             }
-            #sidebar.open {
-                transform: translateX(0);
-            }
-            #sidebar.open + #chat-container {
-                margin-left: 200px;
+            .message {
+                max-width: 90%;
             }
         }
     </style>
 </head>
 <body>
-    <h1>
-        <button id="toggle-sidebar" onclick="toggleSidebar()">☰</button>
-        Chat Interface
-        <button id="new-chat-button" onclick="startNewChat()">New Chat</button>
-    </h1>
+    <!-- Header -->
+    <header class="d-flex align-items-center">
+        <button id="toggle-sidebar"><i class="bi bi-list"></i></button>
+        <h2 class="mx-auto">Chat Interface</h2>
+        <button id="new-chat-button" class="btn btn-outline-light btn-sm"><i class="bi bi-chat-left-text"></i> New Chat</button>
+    </header>
 
-    <div id="sidebar">
-        <h2>Previous Chats</h2>
+    <!-- Sidebar -->
+    <div id="sidebar" class="bg-dark">
+        <h4 class="p-3">Previous Chats</h4>
         <div id="sessions-list">
-            <!-- Sessions will be populated here -->
+            <!-- Sessions will be dynamically inserted here -->
         </div>
     </div>
 
-    <div id="chat-container"></div>
-    <div id="input-container">
-        <input type="text" id="message-input" placeholder="Type your message...">
-        <button onclick="sendMessage()" id="send-button">Send</button>
+    <!-- Chat Container -->
+    <div id="chat-container" class="d-flex flex-column">
+        <!-- Messages will be dynamically inserted here -->
     </div>
+
+    <!-- Input Container -->
+    <div id="input-container">
+        <input type="text" id="message-input" placeholder="Type your message..." aria-label="Message input">
+        <button id="send-button" aria-label="Send message"><i class="bi bi-send"></i></button>
+    </div>
+
+    <!-- Error Message -->
     <div id="error"></div>
 
+    <!-- Bootstrap JS and dependencies (Popper.js) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Optional: Bootstrap Icons -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.js"></script>
     <script>
         let sessionId = null;
         const chatContainer = document.getElementById('chat-container');
@@ -227,14 +176,27 @@
         const sendButton = document.getElementById('send-button');
         const errorDiv = document.getElementById('error');
         const sidebar = document.getElementById('sidebar');
+        const toggleSidebarBtn = document.getElementById('toggle-sidebar');
         const sessionsList = document.getElementById('sessions-list');
+        const newChatButton = document.getElementById('new-chat-button');
 
-        // Allow sending message with Enter key
+        // Toggle Sidebar
+        toggleSidebarBtn.addEventListener('click', () => {
+            sidebar.classList.toggle('open');
+        });
+
+        // Handle sending message on button click
+        sendButton.addEventListener('click', sendMessage);
+
+        // Handle sending message on Enter key press
         messageInput.addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 sendMessage();
             }
         });
+
+        // Handle starting a new chat
+        newChatButton.addEventListener('click', startNewChat);
 
         // Function to send message
         async function sendMessage() {
@@ -247,7 +209,12 @@
 
             // Add user message to chat
             addMessage(message, 'user');
+
+            // Clear input field
             messageInput.value = '';
+
+            // Show loading spinner
+            const loadingMessage = addMessage('...', 'system', true);
 
             try {
                 const response = await fetch('/submit', {
@@ -263,6 +230,9 @@
 
                 const data = await response.json();
 
+                // Remove loading spinner
+                chatContainer.removeChild(loadingMessage);
+
                 if (response.ok) {
                     sessionId = data.session_id;
                     addMessage(data.response, 'system');
@@ -271,6 +241,8 @@
                     throw new Error(data.error || 'An error occurred');
                 }
             } catch (error) {
+                // Remove loading spinner
+                chatContainer.removeChild(loadingMessage);
                 errorDiv.textContent = error.message;
                 console.error('Error:', error);
             } finally {
@@ -281,18 +253,22 @@
             }
         }
 
-        // Function to add message to chat
-        function addMessage(message, type) {
+        // Function to add message to chat container
+        function addMessage(message, type, isLoading = false) {
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${type}-message`;
-
-            // Create message content
-            const messageContent = document.createElement('span');
-            messageContent.textContent = message;
-            messageDiv.appendChild(messageContent);
-
+            messageDiv.classList.add('message', `${type}-message`, 'd-flex', 'align-items-center');
+            if (isLoading) {
+                const spinner = document.createElement('div');
+                spinner.classList.add('spinner-border', 'spinner-border-sm', 'text-light');
+                spinner.setAttribute('role', 'status');
+                spinner.setAttribute('aria-hidden', 'true');
+                messageDiv.appendChild(spinner);
+            } else {
+                messageDiv.textContent = message;
+            }
             chatContainer.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
+            return messageDiv;
         }
 
         // Function to start a new chat
@@ -304,10 +280,9 @@
                 const data = await response.json();
                 if (response.ok) {
                     sessionId = data.session_id;
-                    // Clear chat container
                     chatContainer.innerHTML = '';
                     errorDiv.textContent = '';
-                    // Refresh the sessions list
+                    // Optionally, refresh the sessions list
                     loadSessions();
                 } else {
                     throw new Error(data.error || 'Failed to start a new chat');
@@ -316,11 +291,6 @@
                 errorDiv.textContent = error.message;
                 console.error('Error:', error);
             }
-        }
-
-        // Function to toggle sidebar visibility
-        function toggleSidebar() {
-            sidebar.classList.toggle('open');
         }
 
         // Function to load all sessions into the sidebar
@@ -336,10 +306,9 @@
                     }
                     data.sessions.forEach(session => {
                         const sessionDiv = document.createElement('div');
-                        sessionDiv.className = 'session-item';
-                        const formattedDate = new Date(session.created_at).toLocaleString();
-                        sessionDiv.textContent = `Session ${session.session_id.substring(0, 8)} - ${formattedDate}`;
-                        sessionDiv.onclick = () => loadSession(session.session_id);
+                        sessionDiv.classList.add('session-item');
+                        sessionDiv.textContent = `Session ${session.session_id.substring(0, 8)} - ${new Date(session.created_at).toLocaleString()}`;
+                        sessionDiv.addEventListener('click', () => loadSession(session.session_id));
                         sessionsList.appendChild(sessionDiv);
                     });
                 } else {
