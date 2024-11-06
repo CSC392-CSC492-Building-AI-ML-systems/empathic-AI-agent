@@ -1,3 +1,5 @@
+# app.py
+
 from flask import Flask, render_template, request, jsonify
 import os
 from dotenv import load_dotenv
@@ -10,17 +12,18 @@ from langgraph.prebuilt import create_react_agent
 from langgraph.checkpoint.memory import MemorySaver
 from data_pipeline import DataPipeline
 from utilities import generate_random_session_id
+from datetime import datetime
 
 app = Flask(__name__)
-load_dotenv()  # Load environment variables from .env file
+load_dotenv()  
+
 LANGCHAIN_API_KEY = os.getenv('LANGCHAIN_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY')
 
-# for now, store chat history as a dict
+# store chat histories
 chat_histories = {}
 
-# First prompt to determine if clarification is needed
 prompt1 = '''
 Analyze the user's request and determine if it requires clarification 
 due to ambiguity.
@@ -35,7 +38,6 @@ If no clarification is needed:
 Always provide only one of these two responses, with no additional text.
 '''
 
-# Second prompt to handle the actual response
 prompt2 = '''
 You are an assistant that provides information based on the user's request.
 You will receive input in one of two formats:
@@ -52,7 +54,6 @@ to the input received.
 Format the output as "QUESTION_AGENT_OUTPUT: [your response]".
 '''
 
-# Prompt for context comprehension and empathy
 prompt3 = '''
 You are a chatbot that specializes in context comprehension, tone detection,
 and empathy. Your goal is to understand both the emotional state and the 
@@ -78,7 +79,6 @@ Can you tell me more about what's been difficult?"
 Always follow this format to ensure proper handling by the next agent.
 '''
 
-# Prompt for final synthesis agent
 prompt4 = '''
 You are the final agent in a chatbot pipeline. You will receive two inputs:
 
@@ -86,7 +86,6 @@ You are the final agent in a chatbot pipeline. You will receive two inputs:
    which is either a clarifying question or a detailed response.
 2. An input tagged "EMPATHY_AGENT_OUTPUT", which is an empathy-adjusted 
    response reflecting the user's emotional state.
-
 
 Your job is to merge these two inputs into a coherent final response that:
 - Addresses any clarifying questions, if present, or provides the requested 
@@ -110,9 +109,8 @@ class App:
     _memory: MemorySaver
     _agent1_executor: CompiledGraph
     _agent2_executor: CompiledGraph
-
-    _agent3_executor: CompiledGraph  # Context comprehension and empathy agent
-    _agent4_executor: CompiledGraph  # Synthesis agent
+    _agent3_executor: CompiledGraph 
+    _agent4_executor: CompiledGraph  
 
     def __init__(self):
         load_dotenv()
@@ -120,7 +118,6 @@ class App:
         self._tools = [TavilySearchResults(max_results=2)]
         self._memory = MemorySaver()
 
-        # self._pipeline = DataPipeline()
         self._agent1_executor = create_react_agent(
             self._model, self._tools, state_modifier=prompt1,
             checkpointer=self._memory)
@@ -137,45 +134,42 @@ class App:
     def submit_message(self, message: str, session_id: str) -> str:
         config = {"configurable": {"thread_id": session_id}}
         
-        # self._pipeline.add_message("user", message, session_id)
-
         if session_id not in chat_histories:
-            chat_histories[session_id] = []
+            chat_histories[session_id] = {
+                "created_at": datetime.utcnow().isoformat(),
+                "messages": []
+            }
 
-        chat_histories[session_id].append({"role": "user", "content": message})
+        chat_histories[session_id]["messages"].append({"role": "user", "content": message})
         
+        # Agent 1: Determine if clarification is needed
         response1 = self._agent1_executor.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
-
-        messages = [HumanMessage(content=msg["content"]) for msg in chat_histories[session_id]]
 
         clarification_result = response1["messages"][-1].content
 
 
-        chat_histories[session_id].append({"role": "system", "content": clarification_result})
+        chat_histories[session_id]["messages"].append({"role": "system", "content": clarification_result})
 
         combined_message = message + clarification_result
 
+        # Agent 2: Handle the actual response based on clarification
         response2 = self._agent2_executor.invoke(
             {"messages": [HumanMessage(content=combined_message)]},
             config
         )
 
-
-
-        
-        
         question_gen_response = response2['messages'][-1].content
-        print(question_gen_response)
+        print("Question Generation Response:", question_gen_response)
 
-        # Note that this agent receives the user input only,
-        # without the clarification result.
+        # Agent 3: Context comprehension and empathy
         response3 = self._agent3_executor.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
 
         empathy_agent_response = response3['messages'][-1].content
-        print(empathy_agent_response)
+        print("Empathy Agent Response:", empathy_agent_response)
 
+        # Agent 4: Synthesize final response
         response4 = self._agent4_executor.invoke(
             {"messages": [
                 HumanMessage(
@@ -187,13 +181,13 @@ class App:
         
         final_response = response4['messages'][-1].content
         
-        # self._pipeline.add_message("system", response4, session_id)
-        
-        chat_histories[session_id].append({"role": "system", "content": final_response})
+        chat_histories[session_id]["messages"].append({"role": "system", "content": final_response})
 
         return final_response
 
 chat_app = App()
+
+
 
 @app.route('/')
 def home():
@@ -207,6 +201,10 @@ def submit():
 
     if not session_id:
         session_id = generate_random_session_id()
+        chat_histories[session_id] = {
+            "created_at": datetime.utcnow().isoformat(),
+            "messages": []
+        }
 
     try:
         response = chat_app.submit_message(message, session_id)
@@ -217,15 +215,32 @@ def submit():
 @app.route('/new_chat', methods=['POST'])
 def new_chat():
     session_id = generate_random_session_id()
+    chat_histories[session_id] = {
+        "created_at": datetime.utcnow().isoformat(),
+        "messages": []
+    }
     return jsonify({'session_id': session_id})
+
+@app.route('/sessions', methods=['GET'])
+def get_sessions():
+    """
+    Returns a list of all chat sessions with their creation timestamps.
+    """
+    sessions = [
+        {"session_id": sid, "created_at": data["created_at"]}
+        for sid, data in chat_histories.items()
+    ]
+    return jsonify({'sessions': sessions})
+
+@app.route('/sessions/<session_id>', methods=['GET'])
+def get_session(session_id):
+    """
+    Returns the chat history for a specific session.
+    """
+    session = chat_histories.get(session_id)
+    if not session:
+        return jsonify({'error': 'Session not found'}), 404
+    return jsonify({'session_id': session_id, 'chat_history': session['messages']})
 
 if __name__ == '__main__':
     app.run(debug=True)
-    
-#     print(chat_histories)
-#     print("=== WELCOME TO CHAT APP ===")
-#     while True:
-#         message = input("ME: ")
-#         response = app.submit_message(message, curr_session_id)
-#         print("SYSTEM: " + response)
-#         app._pipeline.get_full_chat_history(curr_session_id, "output.txt")
