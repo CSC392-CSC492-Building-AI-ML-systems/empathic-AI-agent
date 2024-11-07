@@ -1,0 +1,71 @@
+ID,Batch_ID,User_Story,User_Input,Expected_Response,Actual_Response,Evaluation,Emotion,Timestamp,Attempts
+sample2,20241106_210150,1,I need help with my account.,"Are you referring to accessing your account, updating your information, or something else?","I'm really sorry to hear that you're experiencing issues with your account. To better assist you, could you please specify which account you're having trouble with? Is it a banking, email, or perhaps a social media account?","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-06T21:02:02.364765,1
+sample1,20241106_210150,1,Book a meeting for me tomorrow.,Do you mean scheduling a meeting with your team or someone else tomorrow?,"I apologize for any confusion earlier. While I'm unable to book meetings directly, I can certainly help you with the planning process. Could you please provide more details such as the time, duration, and if there are any specific people to invite? Also, if you need any advice on setting up an agenda or deciding on a meeting format, feel free to ask!","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-06T21:02:05.508252,1
+sample3,20241106_210150,1,Can you send that report?,Could you specify which report you’d like me to send?,"I'm sorry for any confusion, but as an AI, I don't have the ability to send reports. However, I'm here to help you with any other questions you have. Could you please specify which report you are referring to? Maybe there's more information I can provide about it.","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-06T21:02:13.621005,1
+sample5,20241106_210150,1,I want to change settings.,"Which settings would you like to change? For example, display settings or notification preferences?","I see that you're looking to change some settings. Could you please provide a bit more detail? Are you trying to adjust settings on your computer, phone, or a specific application? Your clarification will help me guide you more effectively.","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-06T21:02:29.251691,1
+sample4,20241106_210150,1,Plan a trip.,"Are you looking to plan a vacation, a business trip, or something else?","I understand you're looking to plan a trip, and I'd love to help! Could you please provide more details? For instance, your desired destination, how long you plan to stay, and your preferences for accommodation, activities, and transportation would be really helpful. Any specific interests or preferences you may have, such as sightseeing, outdoor activities, or cultural experiences, would also be great to know.","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-06T21:02:31.605476,1
+sample6,20241106_210150,2,I've been trying to learn Python.,What aspects of Python are you focusing on right now?,"That's fantastic! Learning Python is a rewarding endeavor, and it's widely used in many fields. If you're finding any areas particularly challenging, don't hesitate to ask for help! There are also numerous online resources available, including Python courses on websites like Codecademy, Coursera, and edX. Plus, Python's official website is a treasure trove of documentation and tutorials. Keep going, and remember, every programmer was once a beginner. Your journey is just starting!","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-06T21:02:47.579082,1
+sample7,20241106_210150,2,I just adopted a new puppy.,That's exciting! How is your puppy adjusting to its new home?,"Congratulations on your new puppy! It's such a joyful time. I'm here to help if you have any questions or need tips about puppy care. Also, I'm curious, how have your first few days been with your new furry friend?","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-06T21:03:02.941841,1
+sample8,20241106_210150,2,I'm planning to start a garden this spring.,What types of plants are you considering for your garden?,"That's a wonderful plan! Gardening is indeed a rewarding hobby and I'm sure you'll enjoy it. Starting a garden involves a few steps. Choose a location that gets ample sunlight, decide on what you want to plant - beginners usually find tomatoes, cucumbers, peppers, and herbs a good choice. You also need to prepare the soil by removing any grass or weeds and adding compost or other organic matter to enhance its fertility. Regular watering, especially during dry spells, is important too. I'm curious, what kind of plants are you considering for your new garden?","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-06T21:03:10.487544,1
+sample9,20241106_210150,2,I watched the latest Marvel movie.,What did you think about the character development in the film?,"Sounds like you've just had a Marvel movie experience! Marvel movies are quite popular. If you want, we can discuss more about it. What did you think of the movie? Did you enjoy it?","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-06T21:03:15.157361,1
+sample11,20241106_210150,3,I’m feeling overwhelmed.,"I’m sorry to hear that. If you’d like to talk more about it, I’m here to listen whenever you’re ready.","I'm truly sorry to hear that you're feeling overwhelmed. It's important to know it's okay to seek help when things get tough. Are you looking for advice on how to manage stress, or are you seeking professional help? Remember, there's no shame in reaching out to a mental health professional or a trusted person in your life. They can provide the support you need in these trying times.","Empathy: 4
+Supportiveness: 4
+Total Score: 8",Overwhelmed,2024-11-06T21:03:32.143221,1
+sample10,20241106_210150,2,I'm reading '1984' by George Orwell.,What do you think of the author's portrayal of society in '1984' so far?,"That's a remarkable choice! '1984' by George Orwell is indeed a profound novel with many thought-provoking themes related to surveillance, totalitarianism, and how power can manipulate truth. How are you finding the book so far? Is there any specific theme or character that has caught your attention? I'd love to discuss further if you'd like.","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-06T21:03:32.695938,1
+sample12,20241106_210150,3,I'm so frustrated with my internet connection.,I'm sorry you're experiencing that. Can I help troubleshoot the issue with you?,"I'm really sorry to hear that you're having trouble with your internet connection. I understand how frustrating that can be. If you could share more about the specific issues you're facing, I might be able to help further. For instance, are you experiencing slow speed or frequent disconnections? In the meantime, consider some basic troubleshooting steps such as checking the cables and rebooting your router. If these steps don't help, contacting your internet service provider might be the next best course of action.","Empathy: 4
+Supportiveness: 4
+Total Score: 8",Frustrated,2024-11-06T21:03:51.072743,1
+sample13,20241106_210150,3,I've been feeling really down lately.,I'm sorry you're feeling this way. Would you like to talk more about what's been bothering you?,"I'm really sorry to hear that you're feeling this way. It's important to remember that you're not alone and there are people who want to help. Are you seeking advice on dealing with these feelings, or perhaps looking for some uplifting content? Either way, please don't hesitate to reach out to a mental health professional or a trusted person in your life. They can provide the support that you need.","Empathy: 4
+Supportiveness: 4
+Total Score: 8",Down,2024-11-06T21:04:08.374282,1
+sample15,20241106_210150,3,I lost my wallet today.,I'm really sorry that happened. Do you need assistance with reporting it or replacing any items?,"I'm really sorry to hear that you've lost your wallet. That can indeed be a stressful experience. To better assist you, could you tell me more about where you might have lost it? Also, are you looking for steps to take after losing a wallet, or do you need help in trying to find it?","Empathy: 4
+Supportiveness: 4
+Total Score: 8",Worried,2024-11-06T21:04:22.513638,1
+sample14,20241106_210150,3,I'm anxious about my upcoming exams.,I'm sorry to hear that. Maybe we can discuss some study strategies to help ease your anxiety?,"I'm really sorry to hear that you're feeling anxious about your upcoming exams. It's completely normal to feel this way, and many people experience the same emotions. I have some suggestions that may help:
+
+1. Try to create a study schedule to manage your time effectively.
+2. Don't forget to take regular breaks to avoid burnout.
+3. Maintaining a healthy lifestyle can greatly improve your mood and energy levels. 
+4. Practicing relaxation techniques such as deep breathing, meditation, and yoga can help reduce stress and anxiety.
+5. Try to maintain a positive mindset. Remember, exams are not the end of the world. 
+
+If your anxiety continues to be overwhelming, please don't hesitate to reach out to a mental health professional or a trusted person in your life. They can provide you with additional strategies to manage anxiety. You're not alone in this, and there are people who want to help.","Empathy: 4
+Supportiveness: 4
+Total Score: 8",Anxious,2024-11-06T21:04:24.016240,1
+sample16,20241106_210150,4,Schedule a dentist appointment next Monday.,"I apologize, I didn’t catch that correctly. Did you mean scheduling a dental appointment or something else?","I'm sorry for the confusion, but I'm unable to schedule appointments. However, I'm here to provide support and understanding. If you have any concerns or feelings about your upcoming dentist appointment, feel free to share. It's perfectly normal to feel a bit anxious about such appointments.","Politeness: 3
+Correction Handling: 2
+Total Score: 5",,2024-11-06T21:04:40.412464,1
+sample17,20241106_210150,4,Find me a good Italian restaurant nearby.,"I'm sorry, I may have misunderstood. Are you looking for Italian restaurants in your current location?","I'm sorry for any confusion earlier. I've found some top-rated Italian restaurants in New York for you. Becco, located in the Theater District, is particularly well-known for its pasta tasting menu and excellent wine list. Other popular options include Ramerino Italian Prime, Osteria Delbianco at Bryant Park, and Da Andrea in Chelsea. Would you like more details about any specific restaurant?","Politeness: 3
+Correction Handling: 2
+Total Score: 5",,2024-11-06T21:04:48.209892,1
+sample18,20241106_210150,4,Set a reminder for my meeting.,I apologize for the confusion. Could you specify the time and date for the meeting reminder?,I'd be happy to help you with setting a reminder for your meeting. Could you please provide me with more details like the date and time of your meeting? This will enable me to assist you better.,"Politeness: 3
+Correction Handling: 3
+Total Score: 6",,2024-11-06T21:04:54.659318,1
+sample19,20241106_210150,4,Play some music.,"I'm sorry, could you let me know what genre or artist you'd like to listen to?","I'm really sorry for any misunderstanding earlier. I'm a text-based assistant and unfortunately, I can't play music. However, I can definitely help you explore different genres or artists. So, could you please share your music preferences with me?","Politeness: 3
+Correction Handling: 3
+Total Score: 6",,2024-11-06T21:05:10.651988,1
+sample20,20241106_210150,4,Help me with my taxes.,"I apologize, I didn’t understand completely. Are you looking for information on filing taxes or assistance with a specific tax-related issue?","I understand that dealing with taxes can be quite challenging. To assist you better, could you please specify what specific issue or question you have regarding your taxes? Are you having trouble with a particular form, or is it more about understanding tax laws and regulations?","Politeness: 3
+Correction Handling: N/A
+Total Score: 3
+
+Note: There was no misunderstanding in the AI's response to score correction handling.",,2024-11-06T21:05:10.742491,1
