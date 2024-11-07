@@ -264,7 +264,12 @@ def get_sessions():
 def get_session(session_id):
     conn = sqlite3.connect("database_temp.db")
     cur = conn.cursor()
-    cur.execute("SELECT role, content FROM messages WHERE session_id = ?", (session_id,))
+    cur.execute("""
+        SELECT role, content 
+        FROM messages 
+        WHERE session_id = ? AND role IN ('user', 'agent4')
+        ORDER BY id ASC
+    """, (session_id,))
     messages = [{"role": row[0], "content": row[1]} for row in cur.fetchall()]
     conn.close()
     
