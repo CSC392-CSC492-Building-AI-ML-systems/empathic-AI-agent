@@ -153,9 +153,10 @@ class App:
     def submit_message(self, message: str, session_id: str) -> str:
         config = {"configurable": {"thread_id": session_id}}
         
-        #  database
         conn = sqlite3.connect("database_temp.db")
         cur = conn.cursor()
+        
+        # Store user message
         cur.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
                     (session_id, "user", message))
         conn.commit()
@@ -163,11 +164,11 @@ class App:
         # Agent 1: Determine if clarification is needed
         response1 = self._agent1_executor.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
-
         clarification_result = response1["messages"][-1].content
-
+        
+        # Store Agent 1 output
         cur.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
-                    (session_id, "system", clarification_result))
+                    (session_id, "agent1", clarification_result))
         conn.commit()
 
         combined_message = message + clarification_result
@@ -177,16 +178,22 @@ class App:
             {"messages": [HumanMessage(content=combined_message)]},
             config
         )
-
         question_gen_response = response2['messages'][-1].content
-        print("Question Generation Response:", question_gen_response)
+        
+        # Store Agent 2 output
+        cur.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+                    (session_id, "agent2", question_gen_response))
+        conn.commit()
 
         # Agent 3: Context comprehension and empathy
         response3 = self._agent3_executor.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
-
         empathy_agent_response = response3['messages'][-1].content
-        print("Empathy Agent Response:", empathy_agent_response)
+        
+        # Store Agent 3 output
+        cur.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+                    (session_id, "agent3", empathy_agent_response))
+        conn.commit()
 
         # Agent 4: Synthesize final response
         response4 = self._agent4_executor.invoke(
@@ -196,14 +203,14 @@ class App:
             ]},
             config
         )
-        
         final_response = response4['messages'][-1].content
         
+        # Store final response
         cur.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
-                    (session_id, "system", final_response))
+                    (session_id, "agent4", final_response))
         conn.commit()
+        
         conn.close()
-
         return final_response
 
 chat_app = App()
