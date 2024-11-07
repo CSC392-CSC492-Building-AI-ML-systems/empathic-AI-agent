@@ -1,5 +1,3 @@
-# app.py
-
 from flask import Flask, render_template, request, jsonify
 import os
 from dotenv import load_dotenv
@@ -13,6 +11,30 @@ from langgraph.checkpoint.memory import MemorySaver
 from data_pipeline import DataPipeline
 from utilities import generate_random_session_id
 from datetime import datetime
+import sqlite3
+
+def init_db():
+    conn = sqlite3.connect("database_temp.db")
+    cur = conn.cursor()
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS chat_sessions (
+            session_id TEXT PRIMARY KEY,
+            created_at TEXT
+        )
+    ''')
+    cur.execute('''
+        CREATE TABLE IF NOT EXISTS messages (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            session_id TEXT,
+            role TEXT,
+            content TEXT,
+            FOREIGN KEY (session_id) REFERENCES chat_sessions (session_id)
+        )
+    ''')
+    conn.commit()
+    conn.close()
+
+init_db()
 
 app = Flask(__name__)
 load_dotenv()  
@@ -20,9 +42,6 @@ load_dotenv()
 LANGCHAIN_API_KEY = os.getenv('LANGCHAIN_API_KEY')
 OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
 TAVILY_API_KEY = os.getenv('TAVILY_API_KEY')
-
-# store chat histories
-chat_histories = {}
 
 prompt1 = '''
 Analyze the user's request and determine if it requires clarification 
@@ -57,7 +76,7 @@ Format the output as "QUESTION_AGENT_OUTPUT: [your response]".
 prompt3 = '''
 You are a chatbot that specializes in context comprehension, tone detection,
 and empathy. Your goal is to understand both the emotional state and the 
-overall context of the user’s input to ask thoughtful, open-ended questions 
+overall context of the user's input to ask thoughtful, open-ended questions 
 that demonstrate empathy and relevance. Always analyze the user's tone 
 (positive, negative, or neutral) and consider the context of their previous 
 messages to form your responses. 
@@ -134,22 +153,22 @@ class App:
     def submit_message(self, message: str, session_id: str) -> str:
         config = {"configurable": {"thread_id": session_id}}
         
-        if session_id not in chat_histories:
-            chat_histories[session_id] = {
-                "created_at": datetime.utcnow().isoformat(),
-                "messages": []
-            }
+        #  database
+        conn = sqlite3.connect("database_temp.db")
+        cur = conn.cursor()
+        cur.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+                    (session_id, "user", message))
+        conn.commit()
 
-        chat_histories[session_id]["messages"].append({"role": "user", "content": message})
-        
         # Agent 1: Determine if clarification is needed
         response1 = self._agent1_executor.invoke(
             {"messages": [HumanMessage(content=message)]}, config)
 
         clarification_result = response1["messages"][-1].content
 
-
-        chat_histories[session_id]["messages"].append({"role": "system", "content": clarification_result})
+        cur.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+                    (session_id, "system", clarification_result))
+        conn.commit()
 
         combined_message = message + clarification_result
 
@@ -174,20 +193,20 @@ class App:
             {"messages": [
                 HumanMessage(
                     content=question_gen_response + empathy_agent_response)
-            ]
-            },
+            ]},
             config
         )
         
         final_response = response4['messages'][-1].content
         
-        chat_histories[session_id]["messages"].append({"role": "system", "content": final_response})
+        cur.execute("INSERT INTO messages (session_id, role, content) VALUES (?, ?, ?)",
+                    (session_id, "system", final_response))
+        conn.commit()
+        conn.close()
 
         return final_response
 
 chat_app = App()
-
-
 
 @app.route('/')
 def home():
@@ -201,10 +220,12 @@ def submit():
 
     if not session_id:
         session_id = generate_random_session_id()
-        chat_histories[session_id] = {
-            "created_at": datetime.utcnow().isoformat(),
-            "messages": []
-        }
+        conn = sqlite3.connect("database_temp.db")
+        cur = conn.cursor()
+        cur.execute("INSERT INTO chat_sessions (session_id, created_at) VALUES (?, ?)",
+                   (session_id, datetime.utcnow().isoformat()))
+        conn.commit()
+        conn.close()
 
     try:
         response = chat_app.submit_message(message, session_id)
@@ -215,32 +236,34 @@ def submit():
 @app.route('/new_chat', methods=['POST'])
 def new_chat():
     session_id = generate_random_session_id()
-    chat_histories[session_id] = {
-        "created_at": datetime.utcnow().isoformat(),
-        "messages": []
-    }
+    conn = sqlite3.connect("database_temp.db")
+    cur = conn.cursor()
+    cur.execute("INSERT INTO chat_sessions (session_id, created_at) VALUES (?, ?)",
+               (session_id, datetime.utcnow().isoformat()))
+    conn.commit()
+    conn.close()
     return jsonify({'session_id': session_id})
 
 @app.route('/sessions', methods=['GET'])
 def get_sessions():
-    """
-    Returns a list of all chat sessions with their creation timestamps.
-    """
-    sessions = [
-        {"session_id": sid, "created_at": data["created_at"]}
-        for sid, data in chat_histories.items()
-    ]
+    conn = sqlite3.connect("database_temp.db")
+    cur = conn.cursor()
+    cur.execute("SELECT session_id, created_at FROM chat_sessions")
+    sessions = [{"session_id": row[0], "created_at": row[1]} for row in cur.fetchall()]
+    conn.close()
     return jsonify({'sessions': sessions})
 
 @app.route('/sessions/<session_id>', methods=['GET'])
 def get_session(session_id):
-    """
-    Returns the chat history for a specific session.
-    """
-    session = chat_histories.get(session_id)
-    if not session:
+    conn = sqlite3.connect("database_temp.db")
+    cur = conn.cursor()
+    cur.execute("SELECT role, content FROM messages WHERE session_id = ?", (session_id,))
+    messages = [{"role": row[0], "content": row[1]} for row in cur.fetchall()]
+    conn.close()
+    
+    if not messages:
         return jsonify({'error': 'Session not found'}), 404
-    return jsonify({'session_id': session_id, 'chat_history': session['messages']})
+    return jsonify({'session_id': session_id, 'chat_history': messages})
 
 if __name__ == '__main__':
     app.run(debug=True)
