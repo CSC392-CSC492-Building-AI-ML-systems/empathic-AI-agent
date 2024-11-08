@@ -1,3 +1,4 @@
+import argparse
 import pandas as pd
 import os
 import time
@@ -259,22 +260,54 @@ def process_test_case(row, app, chat, rate_limiter, session_id, batch_id):
 
 def save_results(results, input_csv_path, batch_id):
     """
-    Saves test results to a CSV file with batch tracking.
+    Saves test results to a CSV file with batch tracking, and outputs a second summary file with score statistics.
     """
+    # Save individual test results
     results_df = pd.DataFrame(results)
     input_filename = os.path.basename(input_csv_path)
     output_csv_path = f"results_llm_judge_{batch_id}_{input_filename}"
     results_df.to_csv(output_csv_path, index=False)
     print(f"Results saved to {output_csv_path}")
 
-def run_tests_and_save_results(input_csv_path, app, batch_size=3):
+    # Compute summary statistics for the scores
+    summary_data = {}
+    score_columns = ["Clarity", "Follow-Up", "Relevance", "Engagement", "Empathy", "Supportiveness", "Politeness", "Correction Handling", "Total Score"]
+
+    # Initialize sums for each score category
+    for column in score_columns:
+        if column in results_df.columns:
+            summary_data[f"Sum of {column}"] = results_df[column].sum()
+            summary_data[f"Average of {column}"] = results_df[column].mean()
+
+    # Calculate the sum and average of the "Total Score" column across all samples
+    if "Total Score" in results_df.columns:
+        summary_data["Sum of Total Scores"] = results_df["Total Score"].sum()
+        summary_data["Average of Total Scores"] = results_df["Total Score"].mean()
+
+    # Convert summary to DataFrame and save as CSV
+    summary_df = pd.DataFrame([summary_data])
+    summary_output_path = f"summary_llm_judge_{batch_id}_{input_filename}"
+    summary_df.to_csv(summary_output_path, index=False)
+    print(f"Summary saved to {summary_output_path}")
+
+def run_tests_and_save_results(input_csv_path, app, batch_size=3, row_number=None, retries=1):
     """
     Runs test cases in smaller batches with improved rate limiting.
+    If row_number is provided, only that row is processed.
+    If retries are provided, the specified number of retries is used.
     """
     print(f"Loading test cases from {input_csv_path}...")
     test_cases = pd.read_csv(input_csv_path)
     print(f"Loaded {len(test_cases)} test cases.")
     
+    if row_number is not None:
+        row_number -= 1  # Adjust for 1-based indexing
+        if not (0 <= row_number < len(test_cases)):
+            print("Error: Row number is out of range.")
+            return
+        test_cases = test_cases.iloc[[row_number]]
+        print(f"Processing only row {row_number + 1}.")  # Display the original row number
+
     results = []
     batch_id = datetime.now().strftime("%Y%m%d_%H%M%S")
     
@@ -287,23 +320,24 @@ def run_tests_and_save_results(input_csv_path, app, batch_size=3):
     
     for i in range(0, len(test_cases), batch_size):
         batch = test_cases.iloc[i:i + batch_size]
-        print(f"Processing batch {i//batch_size + 1} of {(len(test_cases) + batch_size - 1)//batch_size}")
+        print(f"Processing batch {i // batch_size + 1} of {(len(test_cases) + batch_size - 1) // batch_size}")
         
         with ThreadPoolExecutor(max_workers=2) as executor:
             futures = []
             for _, row in batch.iterrows():
                 session_id = generate_random_session_id()
-                futures.append(
-                    executor.submit(
-                        process_test_case, 
-                        row, 
-                        app, 
-                        chat,
-                        rate_limiter,
-                        session_id, 
-                        batch_id
+                for _ in range(retries):
+                    futures.append(
+                        executor.submit(
+                            process_test_case, 
+                            row, 
+                            app, 
+                            chat,
+                            rate_limiter,
+                            session_id, 
+                            batch_id
+                        )
                     )
-                )
             
             for future in as_completed(futures):
                 try:
@@ -322,6 +356,15 @@ def run_tests_and_save_results(input_csv_path, app, batch_size=3):
     print(f"All results saved. Batch ID: {batch_id}")
 
 if __name__ == "__main__":
-    app = App()
-    input_csv_path = "test_dataset.csv"
-    run_tests_and_save_results(input_csv_path, app)
+    parser = argparse.ArgumentParser(description="Run LLM judge tests on a CSV dataset.")
+    parser.add_argument("csv_path", help="Path to the input CSV file.")
+    parser.add_argument("row", nargs="?", type=int, help="Row number from the input CSV file to process (optional).")
+    parser.add_argument("retries", nargs="?", type=int, default=1, help="Number of retries for the specified row (default: 1).")
+    
+    args = parser.parse_args()
+    
+    if not os.path.exists(args.csv_path):
+        print(f"Error: File '{args.csv_path}' not found.")
+    else:
+        app = App()
+        run_tests_and_save_results(args.csv_path, app, row_number=args.row, retries=args.retries)

@@ -1,0 +1,13 @@
+ID,Batch_ID,User_Story,User_Input,Expected_Response,Actual_Response,Evaluation,Emotion,Timestamp,Attempts
+sample5,20241108_131100,1,I want to change settings.,"Which settings would you like to change? For example, display settings or notification preferences?","I understand you're looking to make some changes to certain settings. To better assist you, could you please specify which settings you want to change? Are these for a specific device or application? Your answer will help me provide the most relevant help.","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-08T13:11:14.661575,1
+sample5,20241108_131100,1,I want to change settings.,"Which settings would you like to change? For example, display settings or notification preferences?","I understand you're looking to change some settings and I'm here to help. Could you please specify which settings you want to change? For instance, are these settings on your phone, computer, a specific application, or something else? Providing this information will enable me to assist you better.","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-08T13:11:14.852713,1
+sample5,20241108_131100,1,I want to change settings.,"Which settings would you like to change? For example, display settings or notification preferences?","I understand you're looking to make some changes to certain settings. To better assist you, could you please specify which settings you want to change? Are these for a specific device or application? Your answer will help me provide the most relevant help.","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-08T13:11:30.601383,1
+sample5,20241108_131100,1,I want to change settings.,"Which settings would you like to change? For example, display settings or notification preferences?","I understand you're looking to make some changes to certain settings. To provide you with accurate help, could you please specify which settings you want to change? Are these for a specific device or application? Your answer will allow me to assist you better.","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-08T13:11:31.744315,1
