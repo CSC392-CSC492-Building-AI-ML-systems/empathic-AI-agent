@@ -80,10 +80,10 @@ AI's response: "{actual_response}"
     - 3: Very clear, directly addresses input
 
 - Follow-Up (0-3): How well does the AI ask relevant follow-up questions?
-    - 0: No follow-up
+    - 0: No follow-up, fails to address any ambiguity
     - 1: Vague or unrelated question
-    - 2: Mostly relevant
-    - 3: Clear, focused follow-up
+    - 2: Mostly relevant follow-up, but lacks precision
+    - 3: Clear, relevant follow-up question that addresses potential ambiguity
 
 Response format:
 Clarity: X
@@ -99,37 +99,35 @@ AI's response: "{actual_response}"
     - 0: Off-topic
     - 1: Partially relevant
     - 2: Mostly relevant, minor gaps
-    - 3: Fully relevant and direct
+    - 3: Fully relevant, direct and concise
 
-- Engagement (0-3): How engaging is the follow-up?
-    - 0: None
+- Engagement (0-3): How engaging is the follow-up question?
+    - 0: No follow-up or engagement, does not encourage user to continue
     - 1: Minimal engagement
     - 2: Somewhat engaging
-    - 3: Highly engaging, deepens conversation
+    - 3: Highly engaging, deepens the conversation with follow-up
 
 Response format:
 Relevance: X
 Engagement: Y
 Total Score: Z""",
 
-        3: f"""Evaluate the AI's response for detecting emotional cues and support, scoring each category from 0-4.
+        3: f"""Evaluate the AI's response for detecting emotional cues and support, scoring each category from 0-3.
 
 User input: "{user_input}"
 AI's response: "{actual_response}"
 
-- Empathy (0-4): How well does the AI detect and respond to emotions?
+- Empathy (0-3): How well does the AI detect and respond to emotions?
     - 0: No acknowledgment
     - 1: Minimal acknowledgment
     - 2: Some recognition
-    - 3: Strong recognition
-    - 4: Fully acknowledges and responds empathetically
+    - 3: Fully acknowledges and responds empathetically
 
-- Supportiveness (0-4): How supportive is the AI?
+- Supportiveness (0-3): How supportive is the AI?
     - 0: No support
     - 1: Minimal support
-    - 2: Some support
-    - 3: Supportive, uses empathy
-    - 4: Very supportive, offers help
+    - 2: Some support but lacks clear follow-up
+    - 3: Very supportive, offers clear follow-up
 
 Response format:
 Empathy: X
@@ -150,8 +148,8 @@ AI's response: "{actual_response}"
 - Correction Handling (0-3): How well does the AI handle misunderstandings?
     - 0: Ignores or repeats error
     - 1: Acknowledges but lacks clarity
-    - 2: Acknowledges and partially corrects
-    - 3: Fully acknowledges and corrects politely
+    - 2: Partially corrects but needs clearer follow-up
+    - 3: Fully acknowledges and politely corrects by asking a follow-up
 
 Response format:
 Politeness: X
@@ -258,34 +256,58 @@ def process_test_case(row, app, chat, rate_limiter, session_id, batch_id):
                     "Attempts": max_retries
                 }
 
+def parse_evaluation_column(evaluation_text):
+    # Define the pattern to match scores like "Clarity: 3"
+    pattern = r"(Clarity|Follow-Up|Relevance|Engagement|Empathy|Supportiveness|Politeness|Correction Handling|Total Score): (\d+)"
+    scores = {}
+    
+    for match in re.findall(pattern, evaluation_text):
+        score_name, score_value = match
+        scores[score_name] = int(score_value)
+    
+    return scores
+
 def save_results(results, input_csv_path, batch_id):
-    """
-    Saves test results to a CSV file with batch tracking, and outputs a second summary file with score statistics.
-    """
-    # Save individual test results
     results_df = pd.DataFrame(results)
     input_filename = os.path.basename(input_csv_path)
     output_csv_path = f"results_llm_judge_{batch_id}_{input_filename}"
     results_df.to_csv(output_csv_path, index=False)
     print(f"Results saved to {output_csv_path}")
 
-    # Compute summary statistics for the scores
-    summary_data = {}
-    score_columns = ["Clarity", "Follow-Up", "Relevance", "Engagement", "Empathy", "Supportiveness", "Politeness", "Correction Handling", "Total Score"]
+    # Initialize dictionary to store parsed scores for each category
+    all_scores = {
+        "Clarity": [],
+        "Follow-Up": [],
+        "Relevance": [],
+        "Engagement": [],
+        "Empathy": [],
+        "Supportiveness": [],
+        "Politeness": [],
+        "Correction Handling": [],
+        "Total Score": []
+    }
 
-    # Initialize sums for each score category
-    for column in score_columns:
-        if column in results_df.columns:
-            summary_data[f"Sum of {column}"] = results_df[column].sum()
-            summary_data[f"Average of {column}"] = results_df[column].mean()
+    # Parse "Evaluation" column for each score and add to respective lists in all_scores
+    for evaluation_text in results_df["Evaluation"]:
+        evaluation_scores = parse_evaluation_column(evaluation_text)
+        for category in all_scores.keys():
+            if category in evaluation_scores:
+                all_scores[category].append(evaluation_scores[category])
 
-    # Calculate the sum and average of the "Total Score" column across all samples
-    if "Total Score" in results_df.columns:
-        summary_data["Sum of Total Scores"] = results_df["Total Score"].sum()
-        summary_data["Average of Total Scores"] = results_df["Total Score"].mean()
+    # Create summary data by calculating sum and average for each category
+    summary_data = {
+        "Category": [],
+        "Sum": [],
+        "Average": []
+    }
 
-    # Convert summary to DataFrame and save as CSV
-    summary_df = pd.DataFrame([summary_data])
+    for category, scores in all_scores.items():
+        summary_data["Category"].append(category)
+        summary_data["Sum"].append(sum(scores))
+        summary_data["Average"].append(sum(scores) / len(scores) if scores else 0)
+
+    # Convert summary_data to DataFrame and save as CSV with row-per-category format
+    summary_df = pd.DataFrame(summary_data)
     summary_output_path = f"summary_llm_judge_{batch_id}_{input_filename}"
     summary_df.to_csv(summary_output_path, index=False)
     print(f"Summary saved to {summary_output_path}")
