@@ -2,7 +2,7 @@ import sqlite3
 from datetime import datetime
 
 def view_database():
-    conn = sqlite3.connect("/Users/devshah/Documents/WorkSpace/University/year 3/CSC393/empathic-AI-agent/database_temp.db")
+    conn = sqlite3.connect("/Users/najwaibrahimi/empathic-AI-agent/database_temp.db")
     cur = conn.cursor()
     
     print("\n=== Chat Sessions ===")
