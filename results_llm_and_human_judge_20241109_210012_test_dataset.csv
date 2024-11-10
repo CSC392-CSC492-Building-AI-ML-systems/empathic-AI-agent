@@ -1,0 +1,137 @@
+ID,Batch_ID,User_Story,User_Input,Expected_Response,Actual_Response,Human_Evaluation,Evaluation,Emotion,Timestamp,Attempts
+sample1,20241109_210012,1,Book a meeting for me tomorrow.,Do you mean scheduling a meeting with your team or someone else tomorrow?,"I understand you're looking to book a meeting for tomorrow. To assist you better, could you please provide more details, such as the time for the meeting and who it's with?","Clarity: 3
+Follow-Up: 3
+Total Score: 6","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-09T21:00:22.257648,1
+sample2,20241109_210012,1,I need help with my account.,"Are you referring to accessing your account, updating your information, or something else?","I understand it's frustrating to have issues with an account. Could you please tell me which specific account you're having trouble with? Is it a social media, banking, or some other type of account? With a bit more details, I can provide better assistance.","Clarity: 3
+Follow-Up: 3
+Total Score: 6","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-09T21:00:25.634071,1
+sample3,20241109_210012,1,Can you send that report?,Could you specify which report you’d like me to send?,"I'm sorry for any misunderstanding. As an AI assistant, I don't have the capability to send reports. However, I'm here to help answer questions and provide support. Can you specify which report you are referring to? Perhaps I can provide information or help you understand something about it.","Clarity: 3
+Follow-Up: 3
+Total Score: 6","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-09T21:00:32.906015,1
+sample5,20241109_210012,1,I want to change settings.,"Which settings would you like to change? For example, display settings or notification preferences?","I understand that you're looking to change some settings. To assist you better, could you please specify which settings you want to change? Are these settings for a particular device or software?","Clarity: 3
+Follow-Up: 3
+Total Score: 6","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-09T21:00:44.378548,1
+sample4,20241109_210012,1,Plan a trip.,"Are you looking to plan a vacation, a business trip, or something else?","I can sense your excitement about planning a trip! To assist you better, could you provide more details like your destination, how long you plan to stay, and the kind of activities you're interested in?","Clarity: 3
+Follow-Up: 3
+Total Score: 6","Clarity: 3
+Follow-Up: 3
+Total Score: 6",,2024-11-09T21:00:45.709782,1
+sample6,20241109_210012,2,I've been trying to learn Python.,What aspects of Python are you focusing on right now?,"I'm glad to hear that you've taken the initiative to learn Python! It's such a versatile and useful language. There's a wealth of resources available to help you, so consider exploring online tutorials, courses, and books. Practice websites can also be valuable. Remember, consistent practice and applying what you learn through small projects can significantly boost your proficiency. By the way, how has your journey been so far? Are there any areas you find particularly challenging? Let me know, and I'll do my best to assist you.","Relevance: 3
+Engagement: 3
+Total Score: 6","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-09T21:00:57.588538,1
+sample7,20241109_210012,2,I just adopted a new puppy.,That's exciting! How is your puppy adjusting to its new home?,"Congratulations on your new puppy! It's such an exciting time. Remember, while it's a lot of fun, it's also a big responsibility. Your puppy will need a balanced diet, regular veterinary check-ups, and plenty of exercise. Training should also start early. Can't wait to hear more about your journey, and do tell, what breed is your new furry friend?","Relevance: 3
+Engagement: 3
+Total Score: 6","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-09T21:01:11.614295,1
+sample9,20241109_210012,2,I watched the latest Marvel movie.,What did you think about the character development in the film?,"I'm thrilled to hear you watched the latest Marvel movie! Marvel indeed has a knack for creating memorable and action-packed experiences. How did it live up to your expectations? Also, I'd love to know if there was a particular scene or character that stood out to you. Sharing these moments can make the movie experience even more enjoyable!","Relevance: 3
+Engagement: 3
+Total Score: 6","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-09T21:01:22.676044,1
+sample8,20241109_210012,2,I'm planning to start a garden this spring.,What types of plants are you considering for your garden?,"That's a fantastic plan! Starting a garden can be incredibly rewarding. Whether you're thinking of growing flowers, vegetables, or a mix of both, there are a few key things to consider.
+
+1. Choose a spot in your yard that receives the right amount of sunlight for the plants you have in mind. Most plants need at least 6 hours of sunlight daily.
+2. Test your soil to see what nutrients it might lack. Soil test kits are available at most garden centers.
+3. Decide what you'd like to grow. For beginners, some plants are easier to start with, like tomatoes, peppers, lettuce, and various herbs.
+4. Your planting schedule will depend on your local climate. Some plants are started indoors, others can be planted directly outside.
+5. You'll need some basic gardening tools, such as a shovel, hoe, rake, and garden hose or watering can.
+6. Regular watering, weeding, and pest control are all part of caring for your garden.
+7. Finally, harvesting is the most rewarding part of gardening, as you get to enjoy the fruits (or vegetables) of your labor!
+
+Remember, gardening is a learning process, so don't worry if not everything goes perfectly the first year. With time and patience, you'll see your garden flourish. Happy gardening!","Relevance: 3
+Engagement: 0
+Total Score: 3","Relevance: 3
+Engagement: 0
+Total Score: 3",,2024-11-09T21:01:27.996120,1
+sample10,20241109_210012,2,I'm reading '1984' by George Orwell.,What do you think of the author's portrayal of society in '1984' so far?,"That's a classic! '1984' by George Orwell is indeed a profound exploration of dystopian themes like totalitarianism, surveillance, and censorship. How are you finding Orwell's depiction of this dystopian future? If you have any questions about the book or its context, don't hesitate to ask.","Relevance: 3
+Engagement: 3
+Total Score: 6","Relevance: 3
+Engagement: 3
+Total Score: 6",,2024-11-09T21:01:41.723225,1
+sample11,20241109_210012,3,I’m feeling overwhelmed.,"I’m sorry to hear that. If you’d like to talk more about it, I’m here to listen whenever you’re ready.","I'm really sorry that you're feeling overwhelmed. It's important to know that it's okay to ask for help and I'm here to assist you. Are you looking for advice on how to manage your stress or do you need someone to talk to about your feelings? Either way, please remember to reach out to a mental health professional or a trusted person in your life who can provide more personal assistance.","Empathy: 3
+Supportiveness: 3
+Total Score: 6","Empathy: 3
+Supportiveness: 3
+Total Score: 6",Overwhelmed,2024-11-09T21:01:43.483785,1
+sample12,20241109_210012,3,I'm so frustrated with my internet connection.,I'm sorry you're experiencing that. Can I help troubleshoot the issue with you?,"I'm really sorry to hear about your frustrations with your internet connection. I understand how disruptive this can be. To better assist you, are you looking for advice on how to improve your connection or seeking technological support? Additionally, could you provide more details about the specific issues you're dealing with? Are there frequent disconnections, or is the speed lower than you expected?","Empathy: 3
+Supportiveness: 3
+Total Score: 6","Empathy: 3
+Supportiveness: 3
+Total Score: 6",Frustrated,2024-11-09T21:01:53.395928,1
+sample13,20241109_210012,3,I've been feeling really down lately.,I'm sorry you're feeling this way. Would you like to talk more about what's been bothering you?,"I'm truly sorry to hear that you're feeling this way, but I'm unable to provide the help that you need. It's really important to talk things over with someone who can, like a mental health professional or a trusted person in your life. Are you looking for professional help, advice, or just someone to talk to? It's okay to seek help, and you don't have to go through this alone.","Empathy: 3
+Supportiveness: 3
+Total Score: 6","Empathy: 3
+Supportiveness: 3
+Total Score: 6",Down,2024-11-09T21:02:07.326333,1
+sample14,20241109_210012,3,I'm anxious about my upcoming exams.,I'm sorry to hear that. Maybe we can discuss some study strategies to help ease your anxiety?,"I'm really sorry to hear that you're feeling anxious about your upcoming exams, it's completely normal to feel this way. Here are some strategies that might help to ease your anxiety:
+
+1. Start studying early. The earlier you start, the more time you have to prepare and the less stressed you'll feel.
+2. Break your study material into smaller, manageable sections. Don't try to learn everything at once.
+3. Practice makes perfect. Try solving previous years' papers or take online quizzes on the same topic.
+4. Maintaining a healthy lifestyle can greatly affect your mood and energy levels. So, remember to eat healthily, exercise regularly, and get plenty of sleep.
+5. Techniques such as deep breathing, meditation, and yoga can help to reduce stress and anxiety.
+
+Remember, it's okay to take breaks and do things you enjoy. All work and no play can make you more anxious. It would be great to know more about what you're studying so we can potentially find specific strategies to make the studying process less stressful. Good luck with your exams!","Empathy: 3
+Supportiveness: 2
+Total Score: 5","Empathy: 3
+Supportiveness: 3
+Total Score: 6",Anxious,2024-11-09T21:02:17.359673,1
+sample15,20241109_210012,3,I lost my wallet today.,I'm really sorry that happened. Do you need assistance with reporting it or replacing any items?,"I'm really sorry to hear about your lost wallet. I can imagine how stressful this must be for you. Here are some steps you might want to consider:
+
+1. Try to remember where you might have left it.
+2. Reach out to the places you visited recently.
+3. If you can't find it, consider cancelling your credit cards and request replacements.
+4. If you believe it was stolen, it might be necessary to file a police report.
+5. Make sure to report the loss to your bank.
+6. You'll likely need to replace your driver's license.
+7. Keep an eye on your credit report for any unusual activity.
+
+Remember, it's crucial to act promptly to minimize any potential damage or loss. Do you recall a specific place where you might have lost it?","Empathy: 3
+Supportiveness: 3
+Total Score: 6","Empathy: 3
+Supportiveness: 3
+Total Score: 6",Worried,2024-11-09T21:02:25.447165,1
+sample16,20241109_210012,4,Schedule a dentist appointment next Monday.,"I apologize, I didn’t catch that correctly. Did you mean scheduling a dental appointment or something else?","I'm really sorry for any confusion earlier. As a text-based AI, I'm unable to schedule appointments. However, I'm here to assist you with any questions you may have about dental appointments or any other information you need. Can I help you with something else?","Politeness: 3
+Correction Handling: 1
+Total Score: 4","Politeness: 3
+Correction Handling: 3
+Total Score: 6",,2024-11-09T21:02:39.582534,1
+sample18,20241109_210012,4,Set a reminder for my meeting.,I apologize for the confusion. Could you specify the time and date for the meeting reminder?,"I'm sorry for any confusion, but I'm unable to set reminders for you. However, I'm here to listen and support you. If you'd like, we can discuss how you're feeling about your upcoming meeting. Can you let me know what time and date this meeting is? It might help to talk about it.","Politeness: 3
+Correction Handling: 3
+Total Score: 6","Politeness: 3
+Correction Handling: 2
+Total Score: 5",,2024-11-09T21:02:50.637392,1
+sample17,20241109_210012,4,Find me a good Italian restaurant nearby.,"I'm sorry, I may have misunderstood. Are you looking for Italian restaurants in your current location?","I found some highly recommended Italian restaurants in Lexington, KY that you might like:
+
+1. [Tony's of Lexington](https://www.yelp.com/search?cflt=italian&find_loc=Lexington,+KY)
+2. [Bourbon n' Toulouse - Chevy Chase](https://www.yelp.com/search?cflt=italian&find_loc=Lexington,+KY)
+3. [Giuseppe's Ristorante Italiano](https://www.yelp.com/search?cflt=italian&find_loc=Lexington,+KY)
+4. [Bella Notte](https://www.yelp.com/search?cflt=italian&find_loc=Lexington,+KY)
+5. [Pasta Garage Italian Cafe](https://www.yelp.com/search?cflt=italian&find_loc=Lexington,+KY)
+
+Please check them out and see which ones you like best. Enjoy exploring these options, and let me know if you need more information. What kind of Italian dishes do you enjoy the most?","Politeness: 3
+Correction Handling: 0
+Total Score: 3","Politeness: 3
+Correction Handling: 3
+Total Score: 6",,2024-11-09T21:02:54.936161,1
+sample19,20241109_210012,4,Play some music.,"I'm sorry, could you let me know what genre or artist you'd like to listen to?","I'm really sorry for the confusion, but as a text-based AI, I'm not equipped to play music. However, I'd be happy to help you find some music to listen to if you could tell me your preferred genre or artist.","Politeness: 3
+Correction Handling: 1
+Total Score: 4","Politeness: 3
+Correction Handling: 3
+Total Score: 6",,2024-11-09T21:03:08.672251,1
+sample20,20241109_210012,4,Help me with my taxes.,"I apologize, I didn’t understand completely. Are you looking for information on filing taxes or assistance with a specific tax-related issue?","I understand that dealing with taxes can be quite overwhelming. Could you please specify what exactly you need help with? Are you trying to understand certain tax laws, or is it tax preparation or planning that you're struggling with? Your clarity would help me provide the most relevant assistance.","Politeness: 3
+Correction Handling: 3
+Total Score: 6","Politeness: 3
+Correction Handling: 3
+Total Score: 6",,2024-11-09T21:03:09.479505,1
