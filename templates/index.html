@@ -24,6 +24,11 @@
             align-items: center;
             justify-content: space-between;
         }
+        .message {
+            display: block;
+            line-height: 1.2;
+            word-wrap: break-word;  
+        }
         #chat-container {
             flex-grow: 1;
             padding: 20px;
@@ -165,6 +170,8 @@
     <!-- Error Message -->
     <div id="error"></div>
 
+    <!-- For Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <!-- Bootstrap JS and dependencies (Popper.js) -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Optional: Bootstrap Icons -->
@@ -256,7 +263,7 @@
         // Function to add message to chat container
         function addMessage(message, type, isLoading = false) {
             const messageDiv = document.createElement('div');
-            messageDiv.classList.add('message', `${type}-message`, 'd-flex', 'align-items-center');
+            messageDiv.classList.add('message', `${type}-message`);
             if (isLoading) {
                 const spinner = document.createElement('div');
                 spinner.classList.add('spinner-border', 'spinner-border-sm', 'text-light');
@@ -264,7 +271,15 @@
                 spinner.setAttribute('aria-hidden', 'true');
                 messageDiv.appendChild(spinner);
             } else {
-                messageDiv.textContent = message;
+                // modified to display newlines
+                const htmlMessage = marked.parse(message); // convert Markdown to HTML
+
+                
+                if (type == 'system'){
+                    messageDiv.style.whiteSpace = 'pre-line';
+                }
+
+                messageDiv.innerHTML = htmlMessage;
             }
             chatContainer.appendChild(messageDiv);
             chatContainer.scrollTop = chatContainer.scrollHeight;
