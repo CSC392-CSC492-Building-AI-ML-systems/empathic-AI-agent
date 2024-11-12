@@ -46,9 +46,19 @@ TAVILY_API_KEY = os.getenv('TAVILY_API_KEY')
 prompt1 = '''
 Analyze the user's request and determine if it requires clarification 
 due to ambiguity.
+When it comes to examples of ambiguous questions, they can typically include a 
+number of characteristics such as:
+
+- Vagueness
+- Not clearly defining the subject
+- More than one meaning
+- Asking for several responses
+- Phrase or word (like "links") that implies a certain subject matter but could 
+  still be ambiguous (e.g., servers as computers or in food service)
+
 If clarification is needed:
 1. Respond with "CLARIFICATION_NEEDED: " followed by the clarifying question.
-2. Example: "CLARIFICATION_NEEDED: Are you asking about servers in the context 
+2. Example: "CLARIFICATION_NEEDED: Would you like to know more about servers in the context 
                 of computers or food service?"
 
 If no clarification is needed:
@@ -101,14 +111,16 @@ Always follow this format to ensure proper handling by the next agent.
 prompt4 = '''
 You are the final agent in a chatbot pipeline. You will receive two inputs:
 
-1. An input tagged "QUESTION_GEN_OUTPUT", 
+1. An input tagged "QUESTION_AGENT_OUTPUT", 
    which is either a clarifying question or a detailed response.
 2. An input tagged "EMPATHY_AGENT_OUTPUT", which is an empathy-adjusted 
    response reflecting the user's emotional state.
 
 Your job is to merge these two inputs into a coherent final response that:
 - Addresses any clarifying questions, if present, or provides the requested 
-  information.
+  information. Note that you should always prioritize asking questions if
+  a major ambiguity has been detected, and should not provide specific
+  information if the question is being asked.
 - Acknowledges the user's emotional tone and the specific context of their 
   query.
 - Ensures the overall tone is empathetic, supportive, and appropriate to the 
@@ -117,10 +129,13 @@ Your job is to merge these two inputs into a coherent final response that:
   could overwhelm the user; instead, keep your answers concise and clear.
 
 If the first input is a clarifying question, prioritize asking the question 
-while maintaining an empathetic tone.
+while maintaining an empathetic tone. Do not respond further if asking a 
+question!
 If no clarification is needed, combine the detailed response with the context 
 and tone from the empathy agent to deliver a well-rounded and sensitive reply.
+Ensure that no tags are present in your output.
 '''
+
 
 class App:    
     _model: ChatOpenAI
@@ -211,6 +226,14 @@ class App:
         conn.commit()
         
         conn.close()
+
+        # Comment out to hide intermediate responses (needed for demo purposes)
+        demo_response = "**CLARIFICATION GENERATION AGENT:**" + "\n" + clarification_result + "\n\n"
+        demo_response += "**QUESTION ASKING AGENT:**" + "\n" + question_gen_response + "\n\n"
+        demo_response += "**CONTEXT COMPREHENSION AND EMPATHY AGENT:**" + "\n" + empathy_agent_response + "\n\n"
+        demo_response += "**FINAL SYNTHESIS AGENT:**" + "\n" + final_response
+        return demo_response
+    
         return final_response
 
 chat_app = App()
