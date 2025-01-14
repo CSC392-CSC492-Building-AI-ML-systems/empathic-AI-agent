@@ -12,6 +12,9 @@ from data_pipeline import DataPipeline
 from utilities import generate_random_session_id
 from datetime import datetime
 import sqlite3
+import asyncio
+import aiohttp
+
 
 def init_db():
     conn = sqlite3.connect("database_temp.db")
